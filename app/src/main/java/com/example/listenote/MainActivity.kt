@@ -27,7 +27,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             ListenoteTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    TopView(
+//                    TopView(
+//                        modifier = Modifier.padding(innerPadding)
+//                    )
+                    MemoEditScreen(
+                        audioResourceId = R.raw.test_my_song,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
