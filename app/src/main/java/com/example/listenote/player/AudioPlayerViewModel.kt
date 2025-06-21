@@ -1,12 +1,13 @@
-package com.example.listenote
+package com.example.listenote.player
 
 import android.app.Application
-import android.net.Uri
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.ExoPlayer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 //再生uiに関するViewModel
-class MemoEditViewModel(application: Application) : AndroidViewModel(application) {
+class AudioPlayerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying = _isPlaying.asStateFlow()
@@ -35,7 +36,7 @@ class MemoEditViewModel(application: Application) : AndroidViewModel(application
         val context = getApplication<Application>().applicationContext
         exoPlayer = ExoPlayer.Builder(context).build().apply {
             //ひとまず動作確認のためRから音声を読み込み
-            val audioUri = Uri.parse("android.resource://${context.packageName}/$audioResourceId")
+            val audioUri = "android.resource://${context.packageName}/$audioResourceId".toUri()
             setMediaItem(MediaItem.fromUri(audioUri))
             prepare()
             addListener(object : Player.Listener {
@@ -61,13 +62,13 @@ class MemoEditViewModel(application: Application) : AndroidViewModel(application
                 }
 
                 override fun onTimelineChanged(
-                    timeline: androidx.media3.common.Timeline,
+                    timeline: Timeline,
                     reason: Int
                 ) {
                     if (!timeline.isEmpty) {
                         val durationMs = timeline.getPeriod(
                             0,
-                            androidx.media3.common.Timeline.Period()
+                            Timeline.Period()
                         ).durationMs
                         _totalDuration.value =
                             if (durationMs == C.TIME_UNSET) 0f else durationMs.toFloat()
