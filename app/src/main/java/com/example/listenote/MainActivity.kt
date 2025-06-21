@@ -31,7 +31,6 @@ class MainActivity : ComponentActivity() {
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
                     MemoEditScreen(
-                        audioResourceId = R.raw.test_my_song,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

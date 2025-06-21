@@ -28,7 +28,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.listenote.ui.theme.formatDuration
 
 @Composable
-fun MemoEditScreen(
+fun MemoEditScreen(modifier: Modifier = Modifier) {
+    PlayerUI(
+        audioResourceId = R.raw.test_my_song,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun PlayerUI(
     audioResourceId: Int,
     modifier: Modifier = Modifier,
     viewModel: MemoEditViewModel = viewModel()
