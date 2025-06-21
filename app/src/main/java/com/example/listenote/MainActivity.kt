@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
 //                    TopView(
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
-                    MemoEditScreen(
+                    MemoDetailScreen(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
