@@ -23,10 +23,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.listenote.ui.theme.ListenoteTheme
 import com.example.listenote.ui.theme.formatDuration
 
 @Composable
@@ -105,45 +103,6 @@ fun MemoEditScreen(
             Text(text = formatDuration(currentPosition.toLong()))
             Spacer(modifier = Modifier.weight(1f))
             Text(text = formatDuration(totalDuration.toLong()))
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun MemoEditPreview() {
-    ListenoteTheme {
-        // PreviewではViewModelが正しく機能しないため、UIの見た目のみ確認
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(64.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(0.8f),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Button(onClick = {}, modifier = Modifier.size(56.dp)) {
-                    Icon(imageVector = Icons.Filled.FastRewind, contentDescription = null)
-                }
-                Button(onClick = {}, modifier = Modifier.size(64.dp)) {
-                    Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = null)
-                }
-                Button(onClick = {}, modifier = Modifier.size(56.dp)) {
-                    Icon(imageVector = Icons.Filled.FastForward, contentDescription = null)
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Slider(value = 0.3f, onValueChange = {}, modifier = Modifier.fillMaxWidth(0.8f))
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(modifier = Modifier.fillMaxWidth(0.8f)) {
-                Text(text = "01:30")
-                Spacer(modifier = Modifier.weight(1f))
-                Text(text = "05:00")
-            }
         }
     }
 }
