@@ -2,6 +2,7 @@ package com.example.listenote.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.listenote.data.model.AudioSource
@@ -9,8 +10,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AudioSourceDao {
-    @Insert
-    suspend fun insert(audioSource: AudioSource)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(audioSource: AudioSource): Long
 
     @Update
     suspend fun update(audioSource: AudioSource)
@@ -23,5 +25,5 @@ interface AudioSourceDao {
 
     @Query("DELETE FROM audio_sources WHERE id = :audioSourceId")
     suspend fun deleteById(audioSourceId: Long)
-    
+
 }
