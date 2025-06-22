@@ -32,6 +32,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.listenote.ui.memo_edit.MemoEditScreen
+import com.example.listenote.ui.memo_edit.MemoEditViewModelFactory
 import com.example.listenote.ui.theme.ListenoteTheme
 import com.example.listenote.ui.top.TopViewModel
 
@@ -61,10 +63,15 @@ class MainActivity : ComponentActivity() {
                             })
                         ) { backStackEntry ->
                             val notebookId = backStackEntry.arguments?.getLong("notebookId")
-                            // TODO: MemoEditScreenにIDを渡して表示する
                             if (notebookId != null) {
-                                // MemoEditScreen(notebookId = notebookId)
-                                Text("メモ編集画面 (ID: $notebookId)") // 仮表示
+                                MemoEditScreen(
+                                    viewModel = viewModel(
+                                        factory = MemoEditViewModelFactory(
+                                            application = this@MainActivity.application,
+                                            notebookId = notebookId
+                                        )
+                                    )
+                                )
                             }
                         }
                     }

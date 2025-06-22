@@ -1,7 +1,7 @@
 package com.example.listenote.player
 
 import android.app.Application
-import androidx.core.net.toUri
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.C
@@ -32,11 +32,9 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     private var exoPlayer: ExoPlayer? = null
     private var positionUpdateJob: Job? = null
 
-    fun initializePlayer(audioResourceId: Int) {
+    fun initializePlayer(audioUri: Uri) {
         val context = getApplication<Application>().applicationContext
         exoPlayer = ExoPlayer.Builder(context).build().apply {
-            //ひとまず動作確認のためRから音声を読み込み
-            val audioUri = "android.resource://${context.packageName}/$audioResourceId".toUri()
             setMediaItem(MediaItem.fromUri(audioUri))
             prepare()
             addListener(object : Player.Listener {

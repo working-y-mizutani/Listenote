@@ -2,6 +2,8 @@
 package com.example.listenote.ui.top
 
 import android.app.Application
+import android.content.Context
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,11 +27,13 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
     fun createNotebookFromUri(uri: Uri) {
         viewModelScope.launch {
 
+            val context = getApplication<Application>().applicationContext
             val title = getFileName(uri) ?: "Untitled"
+            val duration = getAudioDuration(context, uri) ?: 0L
             val audioSource = AudioSource(
                 uri = uri.toString(),
                 title = title,
-                duration = 0L // durationは後で取得・更新する必要がある
+                duration = duration // durationは後で取得・更新する必要がある
             )
             val audioSourceId = audioSourceDao.insert(audioSource)
 
@@ -43,6 +47,20 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
 
 
             _createdNotebookId.value = notebookId
+        }
+    }
+
+    private fun getAudioDuration(context: Context, uri: Uri): Long? {
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(context, uri)
+            val durationStr =
+                retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            retriever.release()
+            durationStr?.toLong()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 
@@ -62,6 +80,7 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
         }
         return newTitle
     }
+
 
     // 画面遷移が完了した後に呼ぶ
     fun onNavigationComplete() {

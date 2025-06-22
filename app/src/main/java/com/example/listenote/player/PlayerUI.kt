@@ -24,13 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.listenote.ui.theme.formatDuration
 
 
 @Composable
 fun PlayerUI(
-    audioResourceId: Int,
+    audioUri: String?,
     modifier: Modifier = Modifier,
     viewModel: AudioPlayerViewModel = viewModel()
 ) {
@@ -38,8 +39,10 @@ fun PlayerUI(
     val currentPosition by viewModel.currentPosition.collectAsState()
     val totalDuration by viewModel.totalDuration.collectAsState()
 
-    LaunchedEffect(audioResourceId) {
-        viewModel.initializePlayer(audioResourceId)
+    LaunchedEffect(audioUri) {
+        audioUri?.let {
+            viewModel.initializePlayer(it.toUri())
+        }
     }
 
     Column(
