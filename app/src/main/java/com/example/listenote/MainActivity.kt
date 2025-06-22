@@ -32,7 +32,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.listenote.ui.memo_edit.MemoEditScreen
 import com.example.listenote.ui.memo_edit.MemoEditViewModelFactory
 import com.example.listenote.ui.theme.ListenoteTheme
 import com.example.listenote.ui.top.TopViewModel
