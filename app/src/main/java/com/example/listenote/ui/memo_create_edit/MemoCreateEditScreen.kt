@@ -27,14 +27,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.listenote.player.AudioPlayerViewModel
+import com.example.listenote.player.PlayerUI
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MemoCreateEditScreen(modifier: Modifier = Modifier) {
+fun MemoCreateEditScreen(
+    modifier: Modifier = Modifier,
+    audioPlayerViewModel: AudioPlayerViewModel
+) {
 
     var impression by remember { mutableStateOf("") }
     var toDo by remember { mutableStateOf("") }
+
 
     Scaffold(
         topBar = {
@@ -121,12 +127,11 @@ fun MemoCreateEditScreen(modifier: Modifier = Modifier) {
                 }
             }
 
-//            PlayerUI(
-//                audioUri = audioSource?.uri,
-//                Modifier
-//                    .weight(0.3f)
-//                    .background(Color.Green)
-//            )
+            PlayerUI(
+                audioUri = null,
+                modifier = Modifier.weight(0.3f),
+                viewModel = audioPlayerViewModel
+            )
         }
     }
 }

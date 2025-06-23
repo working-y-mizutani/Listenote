@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
 import com.example.listenote.ui.memo_edit.NotebookViewModel
 
@@ -23,7 +24,8 @@ import com.example.listenote.ui.memo_edit.NotebookViewModel
 fun NotebookScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: NotebookViewModel
+    viewModel: NotebookViewModel,
+    audioPlayerViewModel: AudioPlayerViewModel
 ) {
     val notebook by viewModel.notebook.collectAsState()
     val audioSource by viewModel.audioSource.collectAsState()
@@ -83,7 +85,8 @@ fun NotebookScreen(
         // プレーヤーにAudioSourceのURIを渡す
         PlayerUI(
             audioUri = audioSource?.uri,
-            modifier = Modifier.weight(0.3f)
+            modifier = Modifier.weight(0.3f),
+            viewModel = audioPlayerViewModel
         )
         // --- ここまで ---
     }

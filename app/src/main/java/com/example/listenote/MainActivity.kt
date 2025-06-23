@@ -32,6 +32,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditScreen
 import com.example.listenote.ui.memo_edit.NotebookViewModelFactory
 import com.example.listenote.ui.theme.ListenoteTheme
@@ -44,6 +45,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ListenoteTheme {
                 val navController = rememberNavController()
+                val audioPlayerViewModel: AudioPlayerViewModel = viewModel()
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     NavHost(
@@ -71,7 +74,8 @@ class MainActivity : ComponentActivity() {
                                             notebookId = notebookId
                                         )
                                     ),
-                                    navController = navController
+                                    navController = navController,
+                                    audioPlayerViewModel = audioPlayerViewModel
                                 )
                             }
                         }
@@ -87,7 +91,7 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val notebookId = backStackEntry.arguments?.getLong("notebookId")
                             val memoId = backStackEntry.arguments?.getLong("memoId")
-                            MemoCreateEditScreen()
+                            MemoCreateEditScreen(audioPlayerViewModel = audioPlayerViewModel)
 
                         }
                     }
