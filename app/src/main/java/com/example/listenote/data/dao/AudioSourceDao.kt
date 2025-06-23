@@ -23,6 +23,9 @@ interface AudioSourceDao {
     @Query("SELECT * FROM audio_sources WHERE id = :audioSourceId")
     suspend fun getAudioSourceById(audioSourceId: Long): AudioSource?
 
+    @Query("SELECT * FROM audio_sources WHERE uri = :uri")
+    suspend fun getAudioSourceByUri(uri: String): AudioSource?
+
     @Query("DELETE FROM audio_sources WHERE id = :audioSourceId")
     suspend fun deleteById(audioSourceId: Long)
 

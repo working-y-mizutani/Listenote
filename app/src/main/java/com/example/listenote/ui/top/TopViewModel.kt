@@ -21,6 +21,7 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
     private val notebookDao = AppDatabase.getDatabase(application).notebookDao()
 
     private val _createdNotebookId = MutableStateFlow<Long?>(null)
+
     // 画面遷移のトリガー役。LaunchedEffectの引数
     val createdNotebookId = _createdNotebookId.asStateFlow()
 
@@ -30,14 +31,23 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
             val context = getApplication<Application>().applicationContext
             val title = getFileName(uri) ?: "Untitled"
             val duration = getAudioDuration(context, uri) ?: 0L
-            val audioSource = AudioSource(
-                uri = uri.toString(),
-                title = title,
-                duration = duration // durationは後で取得・更新する必要がある
-            )
-            val audioSourceId = audioSourceDao.insert(audioSource)
+            val uriString = uri.toString()
 
-
+            var existingAudioSource = audioSourceDao.getAudioSourceByUri(uriString)
+            val audioSourceId: Long
+            if (existingAudioSource == null) {
+                // 2. なければ、新しいAudioSourceを作成してDBに保存
+                val duration = getAudioDuration(context, uri) ?: 0L
+                val newAudioSource = AudioSource(
+                    uri = uriString,
+                    title = title,
+                    duration = duration
+                )
+                audioSourceId = audioSourceDao.insert(newAudioSource)
+            } else {
+                // 3. あれば、そのIDをそのまま使う
+                audioSourceId = existingAudioSource.id
+            }
             val notebookTitle = findUniqueNotebookTitle(audioSourceId, title)
             val notebook = Notebook(
                 audioSourceId = audioSourceId,
