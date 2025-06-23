@@ -1,5 +1,6 @@
 package com.example.listenote
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,15 +15,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.listenote.player.PlayerUI
-import com.example.listenote.ui.memo_edit.MemoEditViewModel
+import com.example.listenote.ui.memo_edit.NotebookViewModel
 
 @Composable
-fun MemoEditScreen(
+fun NotebookScreen(
     modifier: Modifier = Modifier,
-    viewModel: MemoEditViewModel
+    navController: NavController,
+    viewModel: NotebookViewModel
 ) {
-    // ViewModelからStateを収集
     val notebook by viewModel.notebook.collectAsState()
     val audioSource by viewModel.audioSource.collectAsState()
     val memos by viewModel.memos.collectAsState()
@@ -30,11 +32,9 @@ fun MemoEditScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        // --- ここからが主要な変更箇所 ---
         Column(
             modifier = Modifier.weight(0.7f)
         ) {
-            // とりあえずタイトルを表示
             notebook?.let {
                 Text(
                     text = "ノート: ${it.title}",
@@ -53,17 +53,30 @@ fun MemoEditScreen(
             // メモ一覧を表示
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(memos) { memo ->
-                    Text(text = memo.impression ?: "感想なし", modifier = Modifier.padding(16.dp))
+                    Text(
+                        text = memo.impression ?: "感想なし",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                // 既存のメモをタップしたら編集できるようにする
+                                navController.navigate("memo_create_edit/${memo.notebookId}?memoId=${memo.id}")
+                            }
+                            .padding(16.dp)
+                    )
                 }
             }
 
             Button(
-                onClick = { /* TODO: メモ作成の処理 */ },
+                onClick = {
+                    notebook?.let {
+                        navController.navigate("memo_create_edit/${it.id}")
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
             ) {
-                Text("メモを作成")
+                Text("停止してメモを取る")
             }
         }
 

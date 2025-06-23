@@ -32,7 +32,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.listenote.ui.memo_edit.MemoEditViewModelFactory
+import com.example.listenote.ui.memo_create_edit.MemoCreateEditScreen
+import com.example.listenote.ui.memo_edit.NotebookViewModelFactory
 import com.example.listenote.ui.theme.ListenoteTheme
 import com.example.listenote.ui.top.TopViewModel
 
@@ -56,22 +57,38 @@ class MainActivity : ComponentActivity() {
                         }
                         // メモ編集画面のルート
                         composable(
-                            "memo_edit/{notebookId}",
+                            "notebook/{notebookId}",
                             arguments = listOf(navArgument("notebookId") {
                                 type = NavType.LongType
                             })
                         ) { backStackEntry ->
                             val notebookId = backStackEntry.arguments?.getLong("notebookId")
                             if (notebookId != null) {
-                                MemoEditScreen(
+                                NotebookScreen(
                                     viewModel = viewModel(
-                                        factory = MemoEditViewModelFactory(
+                                        factory = NotebookViewModelFactory(
                                             application = this@MainActivity.application,
                                             notebookId = notebookId
                                         )
-                                    )
+                                    ),
+                                    navController = navController
                                 )
                             }
+                        }
+                        composable(
+                            route = "memo_create_edit/{notebookId}?memoId={memoId}",
+                            arguments = listOf(
+                                navArgument("notebookId") { type = NavType.LongType },
+                                navArgument("memoId") {
+                                    type = NavType.LongType
+                                    defaultValue = -1L
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val notebookId = backStackEntry.arguments?.getLong("notebookId")
+                            val memoId = backStackEntry.arguments?.getLong("memoId")
+                            MemoCreateEditScreen()
+
                         }
                     }
                 }
@@ -103,7 +120,7 @@ fun TopView(navController: NavController, modifier: Modifier = Modifier) {
     // ノートブックが作成されたら画面遷移
     LaunchedEffect(createdNotebookId) {
         createdNotebookId?.let { id ->
-            navController.navigate("memo_edit/$id")
+            navController.navigate("notebook/$id")
             viewModel.onNavigationComplete()
         }
     }

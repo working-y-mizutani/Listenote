@@ -122,7 +122,7 @@ fun MemoCreateEditScreen(modifier: Modifier = Modifier) {
             }
 
 //            PlayerUI(
-//                audioResourceId = R.raw.test_my_song,
+//                audioUri = audioSource?.uri,
 //                Modifier
 //                    .weight(0.3f)
 //                    .background(Color.Green)

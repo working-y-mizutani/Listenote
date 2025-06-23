@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MemoEditViewModel(application: Application, private val notebookId: Long) : ViewModel() {
+class NotebookViewModel(application: Application, private val notebookId: Long) : ViewModel() {
 
     private val notebookDao = AppDatabase.getDatabase(application).notebookDao()
     private val audioSourceDao = AppDatabase.getDatabase(application).audioSourceDao()
@@ -47,12 +47,12 @@ class MemoEditViewModel(application: Application, private val notebookId: Long) 
 }
 
 // ViewModelに引数(notebookId)を渡すためのFactory
-class MemoEditViewModelFactory(private val application: Application, private val notebookId: Long) :
+class NotebookViewModelFactory(private val application: Application, private val notebookId: Long) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MemoEditViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(NotebookViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MemoEditViewModel(application, notebookId) as T
+            return NotebookViewModel(application, notebookId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
