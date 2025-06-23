@@ -20,8 +20,8 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
     private val audioSourceDao = AppDatabase.getDatabase(application).audioSourceDao()
     private val notebookDao = AppDatabase.getDatabase(application).notebookDao()
 
-    // 画面遷移のトリガーとなるStateFlow
     private val _createdNotebookId = MutableStateFlow<Long?>(null)
+    // 画面遷移のトリガー役。LaunchedEffectの引数
     val createdNotebookId = _createdNotebookId.asStateFlow()
 
     fun createNotebookFromUri(uri: Uri) {
@@ -45,7 +45,7 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
             )
             val notebookId = notebookDao.insert(notebook)
 
-
+            //こいつの変更をトリガーにNotebookScreenに遷移
             _createdNotebookId.value = notebookId
         }
     }

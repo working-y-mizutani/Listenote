@@ -111,7 +111,6 @@ fun TopView(navController: NavController, modifier: Modifier = Modifier) {
                 // 永続的なアクセス許可を取得
                 val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 context.contentResolver.takePersistableUriPermission(it, flag)
-                // ViewModelのメソッドを呼び出し
                 viewModel.createNotebookFromUri(it)
             }
         }
