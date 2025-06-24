@@ -32,11 +32,8 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     private var exoPlayer: ExoPlayer? = null
     private var positionUpdateJob: Job? = null
 
-    fun initializePlayer(audioUri: Uri) {
-        val context = getApplication<Application>().applicationContext
-        exoPlayer = ExoPlayer.Builder(context).build().apply {
-            setMediaItem(MediaItem.fromUri(audioUri))
-            prepare()
+    init {
+        exoPlayer = ExoPlayer.Builder(getApplication()).build().apply {
             addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(currentIsPlaying: Boolean) {
                     _isPlaying.value = currentIsPlaying
@@ -50,31 +47,33 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     if (playbackState == Player.STATE_ENDED) {
                         _isPlaying.value = false
-                        _currentPosition.value = 0f
-                        seekTo(0)
-                        playWhenReady = false
-                    }
-                    if (_totalDuration.value == 0f && duration > 0) {
-                        _totalDuration.value = duration.toFloat()
+                        seekTo(0) // 再生位置を最初に戻す
+                        // playWhenReady = false // 自動でfalseになるので不要な場合も
                     }
                 }
 
-                override fun onTimelineChanged(
-                    timeline: Timeline,
-                    reason: Int
-                ) {
+                override fun onTimelineChanged(timeline: Timeline, reason: Int) {
                     if (!timeline.isEmpty) {
-                        val durationMs = timeline.getPeriod(
-                            0,
-                            Timeline.Period()
-                        ).durationMs
-                        _totalDuration.value =
-                            if (durationMs == C.TIME_UNSET) 0f else durationMs.toFloat()
+                        val durationMs = timeline.getPeriod(0, Timeline.Period()).durationMs
+                        _totalDuration.value = if (durationMs == C.TIME_UNSET) 0f else durationMs.toFloat()
                     }
                 }
             })
         }
     }
+
+    fun loadAudio(uri: Uri) {
+        exoPlayer?.let {
+            // 現在再生中のメディアと違う場合のみ、新しいメディアをセットする
+            if (it.currentMediaItem?.localConfiguration?.uri != uri) {
+                it.setMediaItem(MediaItem.fromUri(uri))
+                it.prepare()
+            }
+        }
+    }
+
+
+
 
     private fun startPositionUpdates() {
         positionUpdateJob?.cancel()

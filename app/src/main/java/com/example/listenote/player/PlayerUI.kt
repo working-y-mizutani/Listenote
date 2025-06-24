@@ -41,7 +41,7 @@ fun PlayerUI(
 
     LaunchedEffect(audioUri) {
         audioUri?.let {
-            viewModel.initializePlayer(it.toUri())
+            viewModel.loadAudio(it.toUri())
         }
     }
 

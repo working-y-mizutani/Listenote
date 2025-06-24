@@ -20,34 +20,42 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
+import kotlinx.coroutines.flow.collectLatest
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MemoCreateEditScreen(
     modifier: Modifier = Modifier,
-    audioPlayerViewModel: AudioPlayerViewModel
+    audioPlayerViewModel: AudioPlayerViewModel,
+    navController: NavController,
+    viewModel: MemoCreateEditViewModel
 ) {
 
-    var impression by remember { mutableStateOf("") }
-    var toDo by remember { mutableStateOf("") }
+    val uiState = viewModel.uiState
+    val currentPosition by audioPlayerViewModel.currentPosition.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.navigateBack.collectLatest {
+            navController.popBackStack()
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("メモの詳細") },
+                title = { Text(if (uiState.isEditing) "メモの編集" else "メモの作成") },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO: 戻る処理 */ }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "戻る"
@@ -56,18 +64,18 @@ fun MemoCreateEditScreen(
                 },
                 actions = {
                     // 保存ボタン
-                    IconButton(onClick = { /* TODO: 保存処理 */ }) {
+                    IconButton(onClick = { viewModel.saveMemo(currentPosition.toLong()) }) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "保存"
                         )
                     }
-                    // 削除ボタン
-                    IconButton(onClick = { /* TODO: 削除処理 */ }) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "削除"
-                        )
+                    // 削除ボタンは編集モード時のみ表示
+                    // 既存のメモを選択した際に編集モードとなる
+                    if (uiState.isEditing) {
+                        IconButton(onClick = { viewModel.deleteMemo() }) {
+                            Icon(Icons.Default.Delete, contentDescription = "削除")
+                        }
                     }
                 }
             )
@@ -106,8 +114,8 @@ fun MemoCreateEditScreen(
                 ) {
                     Text(text = "感想", modifier = Modifier.width(labelWidth))
                     TextField(
-                        value = impression,
-                        onValueChange = { impression = it },
+                        value = uiState.impression,
+                        onValueChange = { viewModel.onImpressionChange(it) },
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -120,8 +128,8 @@ fun MemoCreateEditScreen(
                 ) {
                     Text(text = "ToDo", modifier = Modifier.width(labelWidth))
                     TextField(
-                        value = toDo,
-                        onValueChange = { toDo = it },
+                        value = uiState.toDo,
+                        onValueChange = { viewModel.onToDoChange(it) },
                         modifier = Modifier.fillMaxSize()
                     )
                 }

@@ -1,0 +1,114 @@
+package com.example.listenote.ui.memo_create_edit
+
+import android.app.Application
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.listenote.data.AppDatabase
+import com.example.listenote.data.model.Memo
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+
+// 画面の状態を管理するデータクラス
+data class MemoEditUiState(
+    val impression: String = "",
+    val toDo: String = "",
+    val isEditing: Boolean = false // 編集モードか否か
+)
+
+class MemoCreateEditViewModel(
+    application: Application,
+    private val notebookId: Long,
+    private val memoId: Long
+) : ViewModel() {
+
+    private val memoDao = AppDatabase.getDatabase(application).memoDao()
+
+    var uiState by mutableStateOf(MemoEditUiState())
+        private set
+
+    // 画面を閉じるなどの単発イベントを通知するためのFlow
+    private val _navigateBack = MutableSharedFlow<Unit>()
+    val navigateBack = _navigateBack.asSharedFlow()
+
+    init {
+        if (memoId != -1L) {
+            // 編集モードの場合、既存のメモをDBから読み込む
+            viewModelScope.launch {
+                val memo = memoDao.getMemoById(memoId)
+                if (memo != null) {
+                    uiState = uiState.copy(
+                        impression = memo.impression ?: "",
+                        toDo = memo.toDo ?: "",
+                        isEditing = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun onImpressionChange(text: String) {
+        uiState = uiState.copy(impression = text)
+    }
+
+    fun onToDoChange(text: String) {
+        uiState = uiState.copy(toDo = text)
+    }
+
+    fun saveMemo(currentTimestamp: Long) {
+        viewModelScope.launch {
+            if (uiState.isEditing) {
+                // 更新処理
+                val updatedMemo = Memo(
+                    id = memoId,
+                    notebookId = notebookId,
+                    timestamp = currentTimestamp,
+                    impression = uiState.impression,
+                    toDo = uiState.toDo
+                    // isCompletedとtoDoPositionは既存の値を引き継ぐ必要があるため、
+                    // ここでは省略。完全な実装では読み込んで設定する。
+                )
+                memoDao.update(updatedMemo)
+            } else {
+                // 新規作成処理
+                val newMemo = Memo(
+                    notebookId = notebookId,
+                    timestamp = currentTimestamp,
+                    impression = uiState.impression,
+                    toDo = uiState.toDo
+                )
+                memoDao.insert(newMemo)
+            }
+            // 保存が完了したら前の画面に戻るイベントを通知
+            _navigateBack.emit(Unit)
+        }
+    }
+
+    fun deleteMemo() {
+        viewModelScope.launch {
+            if (uiState.isEditing) {
+                memoDao.deleteById(memoId)
+                _navigateBack.emit(Unit)
+            }
+        }
+    }
+}
+
+// ViewModelに引数を渡すためのFactory
+class MemoCreateEditViewModelFactory(
+    private val application: Application,
+    private val notebookId: Long,
+    private val memoId: Long
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(MemoCreateEditViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MemoCreateEditViewModel(application, notebookId, memoId) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}

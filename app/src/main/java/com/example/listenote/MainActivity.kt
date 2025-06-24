@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditScreen
+import com.example.listenote.ui.memo_create_edit.MemoCreateEditViewModelFactory
 import com.example.listenote.ui.memo_edit.NotebookViewModelFactory
 import com.example.listenote.ui.theme.ListenoteTheme
 import com.example.listenote.ui.top.TopViewModel
@@ -91,7 +92,19 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val notebookId = backStackEntry.arguments?.getLong("notebookId")
                             val memoId = backStackEntry.arguments?.getLong("memoId")
-                            MemoCreateEditScreen(audioPlayerViewModel = audioPlayerViewModel)
+                            if (notebookId != null && memoId != null) {
+                                MemoCreateEditScreen(
+                                    navController = navController,
+                                    audioPlayerViewModel = audioPlayerViewModel,
+                                    viewModel = viewModel(
+                                        factory = MemoCreateEditViewModelFactory(
+                                            application = this@MainActivity.application,
+                                            notebookId = notebookId,
+                                            memoId = memoId
+                                        )
+                                    )
+                                )
+                            }
 
                         }
                     }
