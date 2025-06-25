@@ -44,12 +44,14 @@ fun MemoCreateEditScreen(
     val uiState = viewModel.uiState
     val currentPosition by audioPlayerViewModel.currentPosition.collectAsState()
 
+    //viewModelの_navigateBack.emit(Unit)が呼ばれると処理される
     LaunchedEffect(Unit) {
         viewModel.navigateBack.collectLatest {
             navController.popBackStack()
         }
     }
 
+    //ScaffoldならTopAppBarを使えるため使用
     Scaffold(
         topBar = {
             TopAppBar(

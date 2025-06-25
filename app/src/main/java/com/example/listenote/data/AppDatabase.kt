@@ -16,6 +16,8 @@ import com.example.listenote.data.model.Notebook
     version = 1,
     exportSchema = false
 )
+// Daoの保持と、初回のDB作成
+
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun memoDao(): MemoDao

@@ -17,7 +17,10 @@ import kotlinx.coroutines.launch
 data class MemoEditUiState(
     val impression: String = "",
     val toDo: String = "",
-    val isEditing: Boolean = false // 編集モードか否か
+
+    // 編集モードか否か。既存のメモを変種る際は編集モードとなる。
+    // 削除ボタンを表示させるかどうかに使用する。
+    val isEditing: Boolean = false
 )
 
 class MemoCreateEditViewModel(
@@ -31,7 +34,8 @@ class MemoCreateEditViewModel(
     var uiState by mutableStateOf(MemoEditUiState())
         private set
 
-    // 画面を閉じるなどの単発イベントを通知するためのFlow
+    // saveMemo/deleteしたときにnavController.popBackStack()を呼ぶための変数
+    // こいつの変更をui側に通知してnavController.popBackStack()を発火させる
     private val _navigateBack = MutableSharedFlow<Unit>()
     val navigateBack = _navigateBack.asSharedFlow()
 
@@ -51,6 +55,8 @@ class MemoCreateEditViewModel(
         }
     }
 
+    // これらをTextFieldのonChangeValueなどに設定して、uiStateの状態を保持する
+    // ここ(ViewModel)でビジネスロジックを書いて関心の分離をおこなう
     fun onImpressionChange(text: String) {
         uiState = uiState.copy(impression = text)
     }
@@ -60,6 +66,7 @@ class MemoCreateEditViewModel(
     }
 
     fun saveMemo(currentTimestamp: Long) {
+        //DB操作なため viewModelScope.launch
         viewModelScope.launch {
             if (uiState.isEditing) {
                 // 更新処理
@@ -84,6 +91,7 @@ class MemoCreateEditViewModel(
                 memoDao.insert(newMemo)
             }
             // 保存が完了したら前の画面に戻るイベントを通知
+            // 具体的な処理(戻る処理)はui側で行う。ViewModelの役割ではない。
             _navigateBack.emit(Unit)
         }
     }
@@ -98,7 +106,7 @@ class MemoCreateEditViewModel(
     }
 }
 
-// ViewModelに引数を渡すためのFactory
+// ViewModelに引数(依存関係)を渡すときはFactoryでインスタンス作成が必須
 class MemoCreateEditViewModelFactory(
     private val application: Application,
     private val notebookId: Long,
