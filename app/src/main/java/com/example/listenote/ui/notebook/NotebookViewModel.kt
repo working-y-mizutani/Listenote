@@ -1,4 +1,4 @@
-package com.example.listenote.ui.memo_edit
+package com.example.listenote.ui.notebook
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

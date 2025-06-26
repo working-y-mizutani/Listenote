@@ -1,4 +1,4 @@
-package com.example.listenote
+package com.example.listenote.ui.notebook
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
-import com.example.listenote.ui.memo_edit.NotebookViewModel
 
 @Composable
 fun NotebookScreen(
@@ -30,6 +29,8 @@ fun NotebookScreen(
     val notebook by viewModel.notebook.collectAsState()
     val audioSource by viewModel.audioSource.collectAsState()
     val memos by viewModel.memos.collectAsState()
+
+    
 
     Column(
         modifier = modifier.fillMaxSize()

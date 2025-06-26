@@ -35,7 +35,8 @@ import androidx.navigation.navArgument
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditScreen
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditViewModelFactory
-import com.example.listenote.ui.memo_edit.NotebookViewModelFactory
+import com.example.listenote.ui.notebook.NotebookScreen
+import com.example.listenote.ui.notebook.NotebookViewModelFactory
 import com.example.listenote.ui.theme.ListenoteTheme
 import com.example.listenote.ui.top.TopViewModel
 
