@@ -56,6 +56,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         // Top画面のルート
+                        // composableでNavHostに情報を登録
+                        // navController.navigate(routeName)で {} 内の処理を実行
                         composable("top") {
                             TopView(navController = navController)
                         }
@@ -65,6 +67,9 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument("notebookId") {
                                 type = NavType.LongType
                             })
+                            // navController.navigate()が呼ばれると、この画面の情報がbackStackに置かれる。
+                            // そして、このcomposableブロックが実行される際に、
+                            // 引数の backStackEntry から arguments を取り出すことができる。
                         ) { backStackEntry ->
                             val notebookId = backStackEntry.arguments?.getLong("notebookId")
                             if (notebookId != null) {
@@ -81,6 +86,8 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         composable(
+                            // メモ新規作成の場合 memoIdはないためオプションにする
+                            // 既存メモ編集の場合memoIdが渡される
                             route = "memo_create_edit/{notebookId}?memoId={memoId}",
                             arguments = listOf(
                                 navArgument("notebookId") { type = NavType.LongType },
@@ -122,7 +129,10 @@ fun TopView(navController: NavController, modifier: Modifier = Modifier) {
 
     // ファイルピッカーのランチャーを準備
     val launcher = rememberLauncherForActivityResult(
+        // 何をするかを設定
         contract = ActivityResultContracts.OpenDocument(),
+        // contractが終わったら何をするかを設定
+        // 末尾ラムダでも書けるが、こっちのほうがわかりやすいため名前付き引数で書く
         onResult = { uri: Uri? ->
             uri?.let {
                 // 永続的なアクセス許可を取得
@@ -133,13 +143,17 @@ fun TopView(navController: NavController, modifier: Modifier = Modifier) {
         }
     )
 
-    // ノートブックが作成されたら画面遷移
-    LaunchedEffect(createdNotebookId) {
-        createdNotebookId?.let { id ->
-            navController.navigate("notebook/$id")
-            viewModel.onNavigationComplete()
+    // ノートブックが作成されたら画面遷移するようLaunchedEffectを宣言
+    LaunchedEffect(
+        // createdNotebookId が変更されたら(=ノートブックが作成されたら) blockが実行される
+        key1 = createdNotebookId,
+        block = {
+            createdNotebookId?.let { id ->
+                navController.navigate("notebook/$id")
+                viewModel.onNavigationComplete()
+            }
         }
-    }
+    )
 
     Column(
         modifier = modifier.fillMaxSize(),
