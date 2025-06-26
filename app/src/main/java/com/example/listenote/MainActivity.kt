@@ -1,5 +1,6 @@
 package com.example.listenote
 
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -77,7 +78,7 @@ class MainActivity : ComponentActivity() {
                                 NotebookScreen(
                                     viewModel = viewModel(
                                         factory = NotebookViewModelFactory(
-                                            application = this@MainActivity.application,
+                                            application = LocalContext.current.applicationContext as Application,
                                             notebookId = notebookId
                                         )
                                     ),
@@ -111,7 +112,7 @@ class MainActivity : ComponentActivity() {
                                     audioPlayerViewModel = audioPlayerViewModel,
                                     viewModel = viewModel(
                                         factory = MemoCreateEditViewModelFactory(
-                                            application = this@MainActivity.application,
+                                            application = LocalContext.current.applicationContext as Application,
                                             notebookId = notebookId,
                                             memoId = memoId,
                                             timestamp = timestamp,

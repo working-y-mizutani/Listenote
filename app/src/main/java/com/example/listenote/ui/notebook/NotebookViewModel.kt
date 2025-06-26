@@ -1,6 +1,7 @@
 package com.example.listenote.ui.notebook
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,7 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class NotebookViewModel(application: Application, private val notebookId: Long) : ViewModel() {
+class NotebookViewModel(application: Application, private val notebookId: Long) :
+    AndroidViewModel(application) {
 
     private val notebookDao = AppDatabase.getDatabase(application).notebookDao()
     private val audioSourceDao = AppDatabase.getDatabase(application).audioSourceDao()
