@@ -23,6 +23,7 @@ import com.example.listenote.ui.memo_create_edit.MemoCreateEditScreen
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditViewModelFactory
 import com.example.listenote.ui.notebook.NotebookScreen
 import com.example.listenote.ui.notebook.NotebookViewModelFactory
+import com.example.listenote.ui.notebook_list.NotebookListScreen
 import com.example.listenote.ui.theme.ListenoteTheme
 import com.example.listenote.ui.top.TopScreen
 
@@ -115,6 +116,12 @@ fun ListenoteApp(
                     )
                 }
 
+            }
+            composable(route = "notebook_list") {
+                NotebookListScreen(
+                    navController = navController,
+                    audioPlayerViewModel = audioPlayerViewModel
+                )
             }
         }
     }

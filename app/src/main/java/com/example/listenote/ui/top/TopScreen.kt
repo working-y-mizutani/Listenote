@@ -78,12 +78,12 @@ fun TopScreen(navController: NavController, modifier: Modifier = Modifier) {
         }
 
         Button(
-            onClick = { /* TODO: ノート一覧画面へ遷移 */ },
+            onClick = { navController.navigate("notebook_list") },
             modifier = Modifier
                 .fillMaxWidth(0.6f)
                 .height(100.dp)
         ) {
-            Text(text = "メモ一覧")
+            Text(text = "ノート一覧")
         }
     }
 }
