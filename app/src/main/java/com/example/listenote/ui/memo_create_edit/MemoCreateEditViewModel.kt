@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 
 // 画面の状態を管理するデータクラス
 data class MemoEditUiState(
+    val timestamp: Long = 0,
     val impression: String = "",
     val toDo: String = "",
 
@@ -26,7 +27,8 @@ data class MemoEditUiState(
 class MemoCreateEditViewModel(
     application: Application,
     private val notebookId: Long,
-    private val memoId: Long
+    private val memoId: Long,
+    private val timestamp: Long,
 ) : ViewModel() {
 
     private val memoDao = AppDatabase.getDatabase(application).memoDao()
@@ -46,12 +48,16 @@ class MemoCreateEditViewModel(
                 val memo = memoDao.getMemoById(memoId)
                 if (memo != null) {
                     uiState = uiState.copy(
+                        timestamp = memo.timestamp,
                         impression = memo.impression ?: "",
                         toDo = memo.toDo ?: "",
                         isEditing = true
                     )
                 }
             }
+        }else{
+            // 新規作成の場合timestampだけ設定する
+            uiState = uiState.copy(timestamp = timestamp)
         }
     }
 
@@ -110,12 +116,13 @@ class MemoCreateEditViewModel(
 class MemoCreateEditViewModelFactory(
     private val application: Application,
     private val notebookId: Long,
-    private val memoId: Long
+    private val memoId: Long,
+    private val timestamp: Long
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MemoCreateEditViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return MemoCreateEditViewModel(application, notebookId, memoId) as T
+            return MemoCreateEditViewModel(application, notebookId, memoId, timestamp) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

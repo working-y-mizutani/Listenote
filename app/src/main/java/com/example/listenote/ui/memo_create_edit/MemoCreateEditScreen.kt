@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
+import com.example.listenote.ui.theme.formatDuration
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -105,7 +106,7 @@ fun MemoCreateEditScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "時間", modifier = Modifier.width(labelWidth))
-                    Text(text = "00:00")
+                    Text(text = formatDuration(uiState.timestamp))
                 }
                 Spacer(modifier = Modifier.height(spaceBetween))
                 Row(

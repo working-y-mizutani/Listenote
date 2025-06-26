@@ -36,6 +36,7 @@ fun NotebookScreen(
     val notebook by viewModel.notebook.collectAsState()
     val audioSource by viewModel.audioSource.collectAsState()
     val memos by viewModel.memos.collectAsState()
+    val currentPosition by audioPlayerViewModel.currentPosition.collectAsState()
 
     Scaffold(
         topBar = {
@@ -70,7 +71,10 @@ fun NotebookScreen(
                                 .fillMaxWidth()
                                 .clickable {
                                     // 既存のメモをタップしたら編集できるようにする
-                                    navController.navigate("memo_create_edit/${memo.notebookId}?memoId=${memo.id}")
+                                    navController.navigate(
+                                        "memo_create_edit/${memo.notebookId}" +
+                                                "?memoId=${memo.id}&timestamp=${memo.timestamp}"
+                                    )
                                 }
                                 .padding(16.dp)
                         )
@@ -80,7 +84,7 @@ fun NotebookScreen(
                 Button(
                     onClick = {
                         notebook?.let {
-                            navController.navigate("memo_create_edit/${it.id}")
+                            navController.navigate("memo_create_edit/${it.id}?timestamp=${currentPosition}")
                         }
                     },
                     modifier = Modifier

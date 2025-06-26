@@ -22,11 +22,11 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     val isPlaying = _isPlaying.asStateFlow()
 
     //現在の再生位置
-    private val _currentPosition = MutableStateFlow(0f)
+    private val _currentPosition = MutableStateFlow(0L)
     val currentPosition = _currentPosition.asStateFlow()
 
     //音声の長さ
-    private val _totalDuration = MutableStateFlow(0f)
+    private val _totalDuration = MutableStateFlow(0L)
     val totalDuration = _totalDuration.asStateFlow()
 
     private var exoPlayer: ExoPlayer? = null
@@ -55,7 +55,7 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
                 override fun onTimelineChanged(timeline: Timeline, reason: Int) {
                     if (!timeline.isEmpty) {
                         val durationMs = timeline.getPeriod(0, Timeline.Period()).durationMs
-                        _totalDuration.value = if (durationMs == C.TIME_UNSET) 0f else durationMs.toFloat()
+                        _totalDuration.value = if (durationMs == C.TIME_UNSET) 0L else durationMs
                     }
                 }
             })
@@ -73,13 +73,11 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     }
 
 
-
-
     private fun startPositionUpdates() {
         positionUpdateJob?.cancel()
         positionUpdateJob = viewModelScope.launch {
             while (_isPlaying.value) {
-                _currentPosition.value = exoPlayer?.currentPosition?.toFloat() ?: 0f
+                _currentPosition.value = exoPlayer?.currentPosition ?: 0L
                 delay(100)
             }
         }
@@ -87,7 +85,7 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun stopPositionUpdates() {
         positionUpdateJob?.cancel()
-        _currentPosition.value = exoPlayer?.currentPosition?.toFloat() ?: 0f
+        _currentPosition.value = exoPlayer?.currentPosition ?: 0L
     }
 
     fun playPause() {
@@ -109,7 +107,7 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
             val newPosition =
                 (it.currentPosition + seekInterval).coerceAtMost(it.duration.coerceAtLeast(0L))
             it.seekTo(newPosition)
-            _currentPosition.value = newPosition.toFloat()
+            _currentPosition.value = newPosition
         }
     }
 
@@ -117,12 +115,12 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
         exoPlayer?.let {
             val newPosition = (it.currentPosition - seekInterval).coerceAtLeast(0L)
             it.seekTo(newPosition)
-            _currentPosition.value = newPosition.toFloat()
+            _currentPosition.value = newPosition
         }
     }
 
     fun onSliderValueChange(newPosition: Float) {
-        _currentPosition.value = newPosition * _totalDuration.value
+        _currentPosition.value = (newPosition * _totalDuration.value).toLong()
     }
 
     fun onSliderValueChangeFinished() {

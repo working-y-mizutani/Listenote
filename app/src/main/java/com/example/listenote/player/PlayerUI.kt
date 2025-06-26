@@ -94,7 +94,7 @@ fun PlayerUI(
 
         // シークバー
         Slider(
-            value = if (totalDuration > 0) currentPosition / totalDuration else 0f,
+            value = if (totalDuration > 0) currentPosition.toFloat() / totalDuration.toFloat() else 0f,
             onValueChange = { newValue -> viewModel.onSliderValueChange(newValue) },
             onValueChangeFinished = { viewModel.onSliderValueChangeFinished() },
             modifier = Modifier.fillMaxWidth(0.8f)

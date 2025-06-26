@@ -89,18 +89,23 @@ class MainActivity : ComponentActivity() {
                         composable(
                             // メモ新規作成の場合 memoIdはないためオプションにする
                             // 既存メモ編集の場合memoIdが渡される
-                            route = "memo_create_edit/{notebookId}?memoId={memoId}",
+                            route = "memo_create_edit/{notebookId}?memoId={memoId}&timestamp={timestamp}",
                             arguments = listOf(
                                 navArgument("notebookId") { type = NavType.LongType },
                                 navArgument("memoId") {
                                     type = NavType.LongType
                                     defaultValue = -1L
-                                }
+                                },
+                                navArgument("timestamp") {
+                                    type = NavType.LongType
+                                    defaultValue = 0L
+                                },
                             )
                         ) { backStackEntry ->
                             val notebookId = backStackEntry.arguments?.getLong("notebookId")
                             val memoId = backStackEntry.arguments?.getLong("memoId")
-                            if (notebookId != null && memoId != null) {
+                            val timestamp = backStackEntry.arguments?.getLong("timestamp")
+                            if (notebookId != null && memoId != null && timestamp != null) {
                                 MemoCreateEditScreen(
                                     navController = navController,
                                     audioPlayerViewModel = audioPlayerViewModel,
@@ -108,7 +113,8 @@ class MainActivity : ComponentActivity() {
                                         factory = MemoCreateEditViewModelFactory(
                                             application = this@MainActivity.application,
                                             notebookId = notebookId,
-                                            memoId = memoId
+                                            memoId = memoId,
+                                            timestamp = timestamp,
                                         )
                                     )
                                 )
