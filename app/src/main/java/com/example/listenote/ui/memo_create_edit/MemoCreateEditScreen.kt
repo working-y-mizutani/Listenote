@@ -21,8 +21,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -43,7 +41,6 @@ fun MemoCreateEditScreen(
 ) {
 
     val uiState = viewModel.uiState
-    val currentPosition by audioPlayerViewModel.currentPosition.collectAsState()
 
     //viewModelの_navigateBack.emit(Unit)が呼ばれると処理される
     LaunchedEffect(Unit) {
@@ -67,10 +64,9 @@ fun MemoCreateEditScreen(
                 },
                 actions = {
                     // 保存ボタン
-                    IconButton(onClick = { viewModel.saveMemo(currentPosition.toLong()) }) {
+                    IconButton(onClick = { viewModel.saveMemo() }) {
                         Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "保存"
+                            imageVector = Icons.Default.Check, contentDescription = "保存"
                         )
                     }
                     // 削除ボタンは編集モード時のみ表示
@@ -80,10 +76,8 @@ fun MemoCreateEditScreen(
                             Icon(Icons.Default.Delete, contentDescription = "削除")
                         }
                     }
-                }
-            )
-        }
-    ) { innerPadding ->
+                })
+        }) { innerPadding ->
 
         Column(
             modifier = modifier
@@ -112,8 +106,7 @@ fun MemoCreateEditScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
-                    verticalAlignment = Alignment.Top
+                        .weight(1f), verticalAlignment = Alignment.Top
                 ) {
                     Text(text = "感想", modifier = Modifier.width(labelWidth))
                     TextField(
@@ -126,8 +119,7 @@ fun MemoCreateEditScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
-                    verticalAlignment = Alignment.Top
+                        .weight(1f), verticalAlignment = Alignment.Top
                 ) {
                     Text(text = "ToDo", modifier = Modifier.width(labelWidth))
                     TextField(
@@ -139,9 +131,7 @@ fun MemoCreateEditScreen(
             }
 
             PlayerUI(
-                audioUri = null,
-                modifier = Modifier.weight(0.3f),
-                viewModel = audioPlayerViewModel
+                audioUri = null, modifier = Modifier.weight(0.3f), viewModel = audioPlayerViewModel
             )
         }
     }

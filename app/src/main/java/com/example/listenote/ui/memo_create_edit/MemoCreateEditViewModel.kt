@@ -55,7 +55,7 @@ class MemoCreateEditViewModel(
                     )
                 }
             }
-        }else{
+        } else {
             // 新規作成の場合timestampだけ設定する
             uiState = uiState.copy(timestamp = timestamp)
         }
@@ -71,7 +71,7 @@ class MemoCreateEditViewModel(
         uiState = uiState.copy(toDo = text)
     }
 
-    fun saveMemo(currentTimestamp: Long) {
+    fun saveMemo() {
         //DB操作なため viewModelScope.launch
         viewModelScope.launch {
             if (uiState.isEditing) {
@@ -79,7 +79,7 @@ class MemoCreateEditViewModel(
                 val updatedMemo = Memo(
                     id = memoId,
                     notebookId = notebookId,
-                    timestamp = currentTimestamp,
+                    timestamp = uiState.timestamp,
                     impression = uiState.impression,
                     toDo = uiState.toDo
                     // isCompletedとtoDoPositionは既存の値を引き継ぐ必要があるため、
@@ -90,7 +90,7 @@ class MemoCreateEditViewModel(
                 // 新規作成処理
                 val newMemo = Memo(
                     notebookId = notebookId,
-                    timestamp = currentTimestamp,
+                    timestamp = uiState.timestamp,
                     impression = uiState.impression,
                     toDo = uiState.toDo
                 )
