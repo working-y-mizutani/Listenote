@@ -120,7 +120,6 @@ fun ListenoteApp(
             composable(route = "notebook_list") {
                 NotebookListScreen(
                     navController = navController,
-                    audioPlayerViewModel = audioPlayerViewModel
                 )
             }
         }
