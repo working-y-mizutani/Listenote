@@ -1,95 +1,110 @@
 package com.example.listenote.player
 
 import android.app.Application
+import android.content.ComponentName
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.Timeline
-import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
+import com.google.common.util.concurrent.MoreExecutors
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-//再生uiに関するViewModel
 class AudioPlayerViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying = _isPlaying.asStateFlow()
 
-    //現在の再生位置
     private val _currentPosition = MutableStateFlow(0L)
     val currentPosition = _currentPosition.asStateFlow()
 
-    //音声の長さ
     private val _totalDuration = MutableStateFlow(0L)
     val totalDuration = _totalDuration.asStateFlow()
 
-    private var exoPlayer: ExoPlayer? = null
     private var positionUpdateJob: Job? = null
+    private var mediaController: MediaController? = null
 
     init {
-        exoPlayer = ExoPlayer.Builder(getApplication()).build().apply {
-            addListener(object : Player.Listener {
-                override fun onIsPlayingChanged(currentIsPlaying: Boolean) {
-                    _isPlaying.value = currentIsPlaying
-                    if (currentIsPlaying) {
-                        startPositionUpdates()
-                    } else {
-                        stopPositionUpdates()
-                    }
-                }
+        val sessionToken = SessionToken(
+            getApplication(),
+            ComponentName(getApplication(), PlaybackService::class.java)
+        )
+        val controllerFuture = MediaController.Builder(getApplication(), sessionToken).buildAsync()
+        controllerFuture.addListener(
+            {
+                mediaController = controllerFuture.get()
+                mediaController?.addListener(playerListener)
+                updateState()
+            },
+            MoreExecutors.directExecutor()
+        )
+    }
 
-                override fun onPlaybackStateChanged(playbackState: Int) {
-                    if (playbackState == Player.STATE_ENDED) {
-                        _isPlaying.value = false
-                        seekTo(0) // 再生位置を最初に戻す
-                        // playWhenReady = false // 自動でfalseになるので不要な場合も
-                    }
-                }
+    // "object : AnyClass" はkotlinの匿名クラスの書き方
+    private val playerListener = object : Player.Listener {
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            _isPlaying.value = isPlaying
+            if (isPlaying) {
+                startPositionUpdates()
+            } else {
+                stopPositionUpdates()
+            }
+        }
 
-                override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-                    if (!timeline.isEmpty) {
-                        val durationMs = timeline.getPeriod(0, Timeline.Period()).durationMs
-                        _totalDuration.value = if (durationMs == C.TIME_UNSET) 0L else durationMs
-                    }
-                }
-            })
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            updateState()
+        }
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            updateState()
         }
     }
 
-    fun loadAudio(uri: Uri) {
-        exoPlayer?.let {
-            // 現在再生中のメディアと違う場合のみ、新しいメディアをセットする
-            if (it.currentMediaItem?.localConfiguration?.uri != uri) {
-                it.setMediaItem(MediaItem.fromUri(uri))
-                it.prepare()
+    private fun updateState() {
+        mediaController?.let {
+            _isPlaying.value = it.isPlaying
+            _totalDuration.value = if (it.duration > 0) it.duration else 0L
+            _currentPosition.value = if (it.currentPosition > 0) it.currentPosition else 0L
+            if (it.isPlaying) {
+                startPositionUpdates()
             }
         }
     }
 
-
     private fun startPositionUpdates() {
+        // これが何度も呼ばれた場合、古いものと同時に動いてしまうかもしれないから
+        // ここでキャンセル
         positionUpdateJob?.cancel()
+        // launchの中で再生位置更新の処理を書いている
+        // positionUpdateJobを握っておき、止められる準備をしている
         positionUpdateJob = viewModelScope.launch {
-            while (_isPlaying.value) {
-                _currentPosition.value = exoPlayer?.currentPosition ?: 0L
-                delay(100)
+            while (true) {
+                mediaController?.currentPosition?.let {
+                    _currentPosition.value = it
+                }
+                delay(100) // 100ミリ秒ごとに再生位置を更新
             }
         }
     }
 
     private fun stopPositionUpdates() {
         positionUpdateJob?.cancel()
-        _currentPosition.value = exoPlayer?.currentPosition ?: 0L
+    }
+
+    fun loadAudio(uri: Uri) {
+        mediaController?.setMediaItem(MediaItem.fromUri(uri))
+        // prepare()で再生準備をさせる
+        mediaController?.prepare()
     }
 
     fun playPause() {
-        exoPlayer?.let {
+        mediaController?.let {
             if (it.isPlaying) {
                 it.pause()
             } else {
@@ -98,38 +113,41 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    //ボタンを押して3秒単位で前後できるようにする
-    //3秒ぐらいが長すぎず短すぎないため
     private val seekInterval = 3000L
 
     fun seekForward() {
-        exoPlayer?.let {
-            val newPosition =
-                (it.currentPosition + seekInterval).coerceAtMost(it.duration.coerceAtLeast(0L))
+        mediaController?.let {
+            val newPosition = (it.currentPosition + seekInterval).coerceAtMost(it.duration)
             it.seekTo(newPosition)
-            _currentPosition.value = newPosition
         }
     }
 
     fun seekBackward() {
-        exoPlayer?.let {
+        mediaController?.let {
             val newPosition = (it.currentPosition - seekInterval).coerceAtLeast(0L)
             it.seekTo(newPosition)
-            _currentPosition.value = newPosition
         }
     }
 
     fun onSliderValueChange(newPosition: Float) {
+        // スライダーをドラッグ中はUI上の表示だけを更新
+        positionUpdateJob?.cancel()
         _currentPosition.value = (newPosition * _totalDuration.value).toLong()
     }
 
     fun onSliderValueChangeFinished() {
-        exoPlayer?.seekTo(_currentPosition.value.toLong())
+        // ドラッグが終わったら、実際のプレイヤーの再生位置を変更
+        mediaController?.seekTo(_currentPosition.value)
+        if (isPlaying.value) {
+            startPositionUpdates()
+        }
+
     }
 
     override fun onCleared() {
         super.onCleared()
-        exoPlayer?.release()
-        exoPlayer = null
+        // ViewModelが破棄されるときにMediaControllerを解放する
+        mediaController?.release()
+        mediaController = null
     }
 }

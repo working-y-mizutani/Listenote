@@ -32,11 +32,14 @@ fun NotebookListScreen(
         modifier = modifier,
     ) {
         items(notebooks) { notebook ->
+
             Row(modifier = Modifier.clickable {
                 navController.navigate("notebook/${notebook.id}")
             }) {
+
                 Text(
                     text = notebook.title + " " +
+                            // DBではlong型で扱っているので日付文字列に変換
                             formatTimestampToDateTime(notebook.createdAt)
                 )
             }
