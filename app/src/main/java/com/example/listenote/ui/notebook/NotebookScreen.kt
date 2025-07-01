@@ -84,6 +84,19 @@ fun NotebookScreen(
                 Button(
                     onClick = {
                         notebook?.let {
+                            navController.navigate("todo_list/${it.id}")
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                ) {
+                    Text("ToDoモードへ")
+                }
+
+                Button(
+                    onClick = {
+                        notebook?.let {
                             navController.navigate("memo_create_edit/${it.id}?timestamp=${currentPosition}")
                         }
                     },

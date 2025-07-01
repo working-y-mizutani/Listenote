@@ -1,10 +1,12 @@
 package com.example.listenote
 
 import android.app.Application
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -25,9 +27,12 @@ import com.example.listenote.ui.notebook.NotebookScreen
 import com.example.listenote.ui.notebook.NotebookViewModelFactory
 import com.example.listenote.ui.notebook_list.NotebookListScreen
 import com.example.listenote.ui.theme.ListenoteTheme
+import com.example.listenote.ui.todo.ToDoListScreen
+import com.example.listenote.ui.todo.ToDoListViewModelFactory
 import com.example.listenote.ui.top.TopScreen
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,6 +46,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ListenoteApp(
     navController: NavHostController,
@@ -121,6 +127,27 @@ fun ListenoteApp(
                 NotebookListScreen(
                     navController = navController,
                 )
+            }
+
+            composable(
+                route = "todo_list/{notebookId}",
+                arguments = listOf(navArgument("notebookId") {
+                    type = NavType.LongType
+                })
+            ) { backStackEntry ->
+                val notebookId = backStackEntry.arguments?.getLong("notebookId")
+                if (notebookId != null) {
+                    ToDoListScreen(
+                        navController = navController,
+                        viewModel = viewModel(
+                            factory = ToDoListViewModelFactory(
+                                application = LocalContext.current.applicationContext as Application,
+                                notebookId = notebookId
+                            )
+                        )
+                    )
+                }
+
             }
         }
     }
