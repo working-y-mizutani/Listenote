@@ -97,6 +97,7 @@ class MemoCreateEditViewModel(
                 memoDao.insert(newMemo)
             }
             // 保存が完了したら前の画面に戻るイベントを通知
+            // emitでflowにUnitを流してviewModel.navigateBack.collect()を発火させる
             // 具体的な処理(戻る処理)はui側で行う。ViewModelの役割ではない。
             _navigateBack.emit(Unit)
         }

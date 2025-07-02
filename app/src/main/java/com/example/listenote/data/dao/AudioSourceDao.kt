@@ -18,6 +18,9 @@ interface AudioSourceDao {
     suspend fun update(audioSource: AudioSource)
 
     @Query("SELECT * FROM audio_sources")
+    // Flow<any> で監視できる
+    // テーブルに変更があるたび、Roomが自動的にクエリを再実行
+    // これによりuiは常に最新の状態に保持される
     fun getAllAudioSources(): Flow<List<AudioSource>>
 
     @Query("SELECT * FROM audio_sources WHERE id = :audioSourceId")

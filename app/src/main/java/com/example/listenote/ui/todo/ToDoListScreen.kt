@@ -1,5 +1,6 @@
 package com.example.listenote.ui.todo
 
+import android.R.attr.text
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,6 +43,7 @@ fun ToDoListScreen(
 
     val memos by viewModel.memos.collectAsState()
     val state = rememberReorderableLazyListState(
+        // from,toはリスト内のindex
         onMove = { from, to ->
             viewModel.moveItem(from.index, to.index)
         },
@@ -50,16 +52,18 @@ fun ToDoListScreen(
         })
 
 
-    LazyColumn(state = state.listState, modifier = Modifier
-        .fillMaxSize()
-        .reorderable(state)) {
+    LazyColumn(
+        state = state.listState,
+        modifier = Modifier
+            .fillMaxSize()
+            .reorderable(state)
+    ) {
         items(memos, key = { it.id }) { memo ->
             ReorderableItem(state, key = memo.id) { isDragging ->
                 ToDoItem(
                     memo = memo,
                     state = state,
                     onCheckedChange = { isChecked ->
-                        // ViewModelの関数を呼び出す
                         viewModel.updateCompletion(memo.id, isChecked)
                     },
                     modifier = Modifier.shadow(if (isDragging) 8.dp else 0.dp)
@@ -74,9 +78,7 @@ fun ToDoListScreen(
 fun ToDoItem(
     memo: Memo,
     state: ReorderableLazyListState,
-    // ViewModelの関数を引数で受け取る
     onCheckedChange: (Boolean) -> Unit,
-    // 親から渡されるModifierを適用する
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -119,6 +121,7 @@ fun ToDoItem(
                     MaterialTheme.typography.bodyLarge
                 }
             )
+
         }
     }
 }

@@ -40,7 +40,8 @@ class NotebookViewModel(application: Application, private val notebookId: Long) 
                 _audioSource.value = audioSourceDao.getAudioSourceById(it.audioSourceId)
             }
 
-            // メモ一覧を監視
+            // メモ一覧をcollectで監視
+            // メモ作成/編集画面から popBackStack()で戻っても自動で最新のメモを読み込める
             memoDao.getMemosForNotebook(notebookId).collect { memoList ->
                 _memos.value = memoList
             }

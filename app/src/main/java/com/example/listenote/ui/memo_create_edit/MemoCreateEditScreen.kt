@@ -28,7 +28,6 @@ import androidx.navigation.NavController
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
 import com.example.listenote.ui.theme.formatDuration
-import kotlinx.coroutines.flow.collectLatest
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,9 +41,11 @@ fun MemoCreateEditScreen(
 
     val uiState = viewModel.uiState
 
-    //viewModelの_navigateBack.emit(Unit)が呼ばれると処理される
+    // Unitは変化しない値なので初回だけ中の処理が行われる
+    // viewModelの_navigateBack.emit(Unit)が呼ばれると処理される
     LaunchedEffect(Unit) {
-        viewModel.navigateBack.collectLatest {
+        // collectでnavigateBackの変化を監視
+        viewModel.navigateBack.collect {
             navController.popBackStack()
         }
     }
