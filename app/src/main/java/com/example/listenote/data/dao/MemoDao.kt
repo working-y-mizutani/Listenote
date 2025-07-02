@@ -23,4 +23,8 @@ interface MemoDao {
 
     @Query("DELETE FROM memos WHERE id = :memoId")
     suspend fun deleteById(memoId: Long)
+
+    @Query("SELECT MAX(to_do_position) FROM memos WHERE notebook_id = :notebookId")
+    suspend fun getMaxToDoPosition(notebookId: Long): Int?
+
 }

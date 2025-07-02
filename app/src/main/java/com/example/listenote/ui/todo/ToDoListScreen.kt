@@ -1,6 +1,5 @@
 package com.example.listenote.ui.todo
 
-import android.R.attr.text
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,14 +50,15 @@ fun ToDoListScreen(
             viewModel.saveOrder()
         })
 
-
+    // SQL空の取得は順番が確定していないので並べ替えしてLazyColumnに渡す
+    val sortedMemos = memos.sortedBy { it.toDoPosition }
     LazyColumn(
         state = state.listState,
         modifier = Modifier
             .fillMaxSize()
             .reorderable(state)
     ) {
-        items(memos, key = { it.id }) { memo ->
+        items(sortedMemos, key = { it.id }) { memo ->
             ReorderableItem(state, key = memo.id) { isDragging ->
                 ToDoItem(
                     memo = memo,
@@ -121,6 +121,9 @@ fun ToDoItem(
                     MaterialTheme.typography.bodyLarge
                 }
             )
+
+            // toDoPosition確認用
+            Text(text = "ポジション" + memo.toDoPosition.toString())
 
         }
     }

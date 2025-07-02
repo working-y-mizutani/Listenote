@@ -88,11 +88,13 @@ class MemoCreateEditViewModel(
                 memoDao.update(updatedMemo)
             } else {
                 // 新規作成処理
+                val maxPosition = memoDao.getMaxToDoPosition(notebookId)
                 val newMemo = Memo(
                     notebookId = notebookId,
                     timestamp = uiState.timestamp,
                     impression = uiState.impression,
-                    toDo = uiState.toDo
+                    toDo = uiState.toDo,
+                    toDoPosition = maxPosition?.plus(1) ?: 0
                 )
                 memoDao.insert(newMemo)
             }
