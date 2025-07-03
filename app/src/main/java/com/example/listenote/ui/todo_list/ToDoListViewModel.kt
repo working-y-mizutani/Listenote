@@ -1,4 +1,4 @@
-package com.example.listenote.ui.todo
+package com.example.listenote.ui.todo_list
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

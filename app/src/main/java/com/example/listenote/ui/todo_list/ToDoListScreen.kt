@@ -1,4 +1,4 @@
-package com.example.listenote.ui.todo
+package com.example.listenote.ui.todo_list
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -70,6 +71,20 @@ fun ToDoListScreen(
                 )
             }
         }
+    }
+
+    Button(
+        onClick = {
+            // viewModelからnotebookIdを取得して渡す
+            val notebookId = viewModel.notebook.value?.id
+            if (notebookId != null) {
+                navController.navigate("focus_todo_screen/$notebookId")
+            }
+        },
+        // sortedMemosの中に未完了タスクがある場合のみボタンを有効化
+        enabled = sortedMemos.any { !it.isCompleted && !it.toDo.isNullOrEmpty() }
+    ) {
+        Text("ToDoモード開始")
     }
 
 }

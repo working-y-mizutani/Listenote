@@ -27,4 +27,8 @@ interface MemoDao {
     @Query("SELECT MAX(to_do_position) FROM memos WHERE notebook_id = :notebookId")
     suspend fun getMaxToDoPosition(notebookId: Long): Int?
 
+    @Query("SELECT * FROM memos WHERE notebook_id = :notebookId AND is_completed = 0 ORDER BY to_do_position ASC")
+    suspend fun getUncompletedMemosForNotebook(notebookId: Long): List<Memo>
+
+
 }

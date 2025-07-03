@@ -21,14 +21,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.listenote.player.AudioPlayerViewModel
+import com.example.listenote.ui.focus_todo.FocusToDoScreen
+import com.example.listenote.ui.focus_todo.FocusToDoViewModelFactory
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditScreen
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditViewModelFactory
 import com.example.listenote.ui.notebook.NotebookScreen
 import com.example.listenote.ui.notebook.NotebookViewModelFactory
 import com.example.listenote.ui.notebook_list.NotebookListScreen
 import com.example.listenote.ui.theme.ListenoteTheme
-import com.example.listenote.ui.todo.ToDoListScreen
-import com.example.listenote.ui.todo.ToDoListViewModelFactory
+import com.example.listenote.ui.todo_list.ToDoListScreen
+import com.example.listenote.ui.todo_list.ToDoListViewModelFactory
 import com.example.listenote.ui.top.TopScreen
 
 class MainActivity : ComponentActivity() {
@@ -148,6 +150,28 @@ fun ListenoteApp(
                     )
                 }
 
+            }
+
+            composable(
+                // ToDoListScreenからnotebookIdを受け取る
+                route = "focus_todo_screen/{notebookId}",
+                arguments = listOf(navArgument("notebookId") {
+                    type = NavType.LongType
+                })
+            ) { backStackEntry ->
+                val notebookId = backStackEntry.arguments?.getLong("notebookId")
+                if (notebookId != null) {
+                    // これから作成するViewModelとScreenを指定
+                    FocusToDoScreen(
+                        navController = navController,
+                        viewModel = viewModel(
+                            factory = FocusToDoViewModelFactory(
+                                application = LocalContext.current.applicationContext as Application,
+                                notebookId = notebookId
+                            )
+                        )
+                    )
+                }
             }
         }
     }
