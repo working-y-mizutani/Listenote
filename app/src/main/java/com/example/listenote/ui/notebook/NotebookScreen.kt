@@ -83,6 +83,7 @@ fun NotebookScreen(
 
                 Button(
                     onClick = {
+
                         notebook?.let {
                             navController.navigate("todo_list/${it.id}")
                         }
@@ -96,9 +97,14 @@ fun NotebookScreen(
 
                 Button(
                     onClick = {
+                        if (audioPlayerViewModel.isPlaying.value) {
+                            // 再生中の場合のみ playPause() を呼び出して一時停止させる
+                            audioPlayerViewModel.playPause()
+                        }
                         notebook?.let {
                             navController.navigate("memo_create_edit/${it.id}?timestamp=${currentPosition}")
                         }
+
                     },
                     modifier = Modifier
                         .fillMaxWidth()
