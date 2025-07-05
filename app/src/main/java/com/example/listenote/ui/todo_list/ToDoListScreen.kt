@@ -82,7 +82,7 @@ fun ToDoListScreen(
             }
         },
         // sortedMemosの中に未完了タスクがある場合のみボタンを有効化
-        enabled = sortedMemos.any { !it.isCompleted && !it.toDo.isNullOrEmpty() }
+        enabled = sortedMemos.any { !it.isCompleted }
     ) {
         Text("ToDoモード開始")
     }
@@ -139,6 +139,8 @@ fun ToDoItem(
 
             // toDoPosition確認用
             Text(text = "ポジション" + memo.toDoPosition.toString())
+
+            Text(text = "isCompleted is" + memo.isCompleted.toString())
 
         }
     }
