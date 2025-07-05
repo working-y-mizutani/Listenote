@@ -42,6 +42,8 @@ class FocusToDoViewModel(application: Application, private val notebookId: Long)
 
     // 仕様書3.6: [完了]ボタンの機能
     fun onCompleteClick() {
+        // 空のtasksにアクセスしないようにガードしておく
+        // 素早く完了ボタンを押すと空のtasksにアクセスしてしまう可能性があるため
         if (_uiState.value.tasks.isEmpty()) return
 
         val currentTask = _uiState.value.tasks.first()
@@ -75,7 +77,10 @@ class FocusToDoViewModel(application: Application, private val notebookId: Long)
 }
 
 // ViewModelに引数を渡すためのFactory
-class FocusToDoViewModelFactory(private val application: Application, private val notebookId: Long) :
+class FocusToDoViewModelFactory(
+    private val application: Application,
+    private val notebookId: Long
+) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FocusToDoViewModel::class.java)) {
