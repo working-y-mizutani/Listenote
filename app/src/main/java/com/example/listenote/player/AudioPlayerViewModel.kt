@@ -105,6 +105,7 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
 
     fun loadAudio(uri: Uri) {
 
+        // これがないと保存時などに再生位置が0になってしまう
         if (currentLoadedUri == uri) {
             // 同じ音源が既にロードされていれば、何もしない
             return
