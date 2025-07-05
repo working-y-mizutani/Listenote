@@ -30,6 +30,8 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     private var positionUpdateJob: Job? = null
     private var mediaController: MediaController? = null
 
+    private var currentLoadedUri: Uri? = null
+
     init {
         val sessionToken = SessionToken(
             getApplication(),
@@ -62,6 +64,10 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
         }
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+
+            if (mediaItem == null) {
+                currentLoadedUri = null
+            }
             updateState()
         }
     }
@@ -98,9 +104,16 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun loadAudio(uri: Uri) {
+
+        if (currentLoadedUri == uri) {
+            // 同じ音源が既にロードされていれば、何もしない
+            return
+        }
         mediaController?.setMediaItem(MediaItem.fromUri(uri))
         // prepare()で再生準備をさせる
         mediaController?.prepare()
+
+        currentLoadedUri = uri
     }
 
     fun playPause() {
@@ -147,6 +160,7 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     override fun onCleared() {
         super.onCleared()
         // ViewModelが破棄されるときにMediaControllerを解放する
+        currentLoadedUri = null
         mediaController?.release()
         mediaController = null
     }
