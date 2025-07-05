@@ -1,8 +1,8 @@
 package com.example.listenote.ui.todo_list
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -53,39 +53,53 @@ fun ToDoListScreen(
 
     // SQL空の取得は順番が確定していないので並べ替えしてLazyColumnに渡す
     val sortedMemos = memos.sortedBy { it.toDoPosition }
-    LazyColumn(
-        state = state.listState,
-        modifier = Modifier
-            .fillMaxSize()
-            .reorderable(state)
-    ) {
-        items(sortedMemos, key = { it.id }) { memo ->
-            ReorderableItem(state, key = memo.id) { isDragging ->
-                ToDoItem(
-                    memo = memo,
-                    state = state,
-                    onCheckedChange = { isChecked ->
-                        viewModel.updateCompletion(memo.id, isChecked)
-                    },
-                    modifier = Modifier.shadow(if (isDragging) 8.dp else 0.dp)
-                )
+    Column {
+        LazyColumn(
+            state = state.listState,
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .reorderable(state)
+        ) {
+            items(sortedMemos, key = { it.id }) { memo ->
+                ReorderableItem(state, key = memo.id) { isDragging ->
+                    ToDoItem(
+                        memo = memo,
+                        state = state,
+                        onCheckedChange = { isChecked ->
+                            viewModel.updateCompletion(memo.id, isChecked)
+                        },
+                        modifier = Modifier.shadow(if (isDragging) 8.dp else 0.dp)
+                    )
+                }
             }
         }
+
+
+        Button(
+            onClick = {
+                // viewModelからnotebookIdを取得して渡す
+                val notebookId = viewModel.notebook.value?.id
+                if (notebookId != null) {
+                    navController.navigate("focus_todo_screen/$notebookId")
+                }
+            },
+            // sortedMemosの中に未完了タスクがある場合のみボタンを有効化
+            enabled = sortedMemos.any { !it.isCompleted }
+        ) {
+            Text("ToDoモード開始")
+        }
+
+        Button(
+            onClick = { viewModel.updateAllIncomplete() }
+        ) { Text(text = "全部未完了") }
+
+        Button(
+            onClick = { viewModel.updateAllComplete() }
+        ) { Text(text = "全部完了") }
+
     }
 
-    Button(
-        onClick = {
-            // viewModelからnotebookIdを取得して渡す
-            val notebookId = viewModel.notebook.value?.id
-            if (notebookId != null) {
-                navController.navigate("focus_todo_screen/$notebookId")
-            }
-        },
-        // sortedMemosの中に未完了タスクがある場合のみボタンを有効化
-        enabled = sortedMemos.any { !it.isCompleted }
-    ) {
-        Text("ToDoモード開始")
-    }
 
 }
 

@@ -67,9 +67,34 @@ class ToDoListViewModel(application: Application, private val notebookId: Long) 
             }
         }
     }
+
+    //Test用
+    fun updateAllComplete() {
+        viewModelScope.launch {
+            _memos.value.forEach { memo ->
+                if (!memo.isCompleted) {
+                    memoDao.update(memo.copy(isCompleted = true))
+                }
+            }
+        }
+    }
+
+    //Test用
+    fun updateAllIncomplete() {
+        viewModelScope.launch {
+            _memos.value.forEach { memo ->
+                if (memo.isCompleted) {
+                    memoDao.update(memo.copy(isCompleted = false))
+                }
+            }
+        }
+    }
 }
 
-class ToDoListViewModelFactory(private val application: Application, private val notebookId: Long) :
+class ToDoListViewModelFactory(
+    private val application: Application,
+    private val notebookId: Long
+) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ToDoListViewModel::class.java)) {

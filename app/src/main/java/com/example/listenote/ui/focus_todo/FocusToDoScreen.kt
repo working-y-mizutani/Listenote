@@ -1,7 +1,20 @@
 package com.example.listenote.ui.focus_todo
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,7 +68,12 @@ fun FocusToDoScreen(
 }
 
 @Composable
-fun TaskView(task: Memo, progressText: String, onCompleteClick: () -> Unit, onPostponeClick: () -> Unit) {
+fun TaskView(
+    task: Memo,
+    progressText: String,
+    onCompleteClick: () -> Unit,
+    onPostponeClick: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -63,6 +81,15 @@ fun TaskView(task: Memo, progressText: String, onCompleteClick: () -> Unit, onPo
     ) {
         Text(text = progressText, style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(64.dp))
+
+
+        Text(
+            text = task.impression ?: "",
+            fontSize = 24.sp,
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp)
+        )
 
         Text(
             text = task.toDo ?: "",
@@ -72,16 +99,24 @@ fun TaskView(task: Memo, progressText: String, onCompleteClick: () -> Unit, onPo
                 .padding(horizontal = 16.dp)
         )
 
+
+
         Spacer(modifier = Modifier.height(64.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(onClick = onPostponeClick, modifier = Modifier.size(width = 140.dp, height = 60.dp)) {
+            Button(
+                onClick = onPostponeClick,
+                modifier = Modifier.size(width = 140.dp, height = 60.dp)
+            ) {
                 Text("後回し")
             }
-            Button(onClick = onCompleteClick, modifier = Modifier.size(width = 140.dp, height = 60.dp)) {
+            Button(
+                onClick = onCompleteClick,
+                modifier = Modifier.size(width = 140.dp, height = 60.dp)
+            ) {
                 Text("完了")
             }
         }
