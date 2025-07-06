@@ -3,8 +3,10 @@ package com.example.listenote.ui.top
 
 import android.app.Application
 import android.content.Context
+import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.provider.OpenableColumns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.listenote.data.AppDatabase
@@ -76,7 +78,26 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
 
     // URIからファイル名を取得するヘルパー関数
     private fun getFileName(uri: Uri): String? {
-        return uri.path?.let { File(it).name }
+        // AndroidViewModelからアプリケーションのContextを取得
+        val context = getApplication<Application>().applicationContext
+        var fileName: String? = null
+
+        // ContentResolverを使って、URIからファイル情報を問い合わせ
+        val cursor: Cursor? = context.contentResolver.query(
+            uri, null, null, null, null, null
+        )
+
+        // cursorを使って、DISPLAY_NAME (表示名) カラムからファイル名を取得
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val displayNameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (displayNameIndex != -1) {
+                    fileName = it.getString(displayNameIndex)
+                }
+            }
+        }
+
+        return fileName
     }
 
     // 同じ音源からNoteを生成する場合Titleを 音源名_n とするため使用
