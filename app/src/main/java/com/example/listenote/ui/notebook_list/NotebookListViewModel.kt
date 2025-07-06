@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class NotebookListViewModel(application: Application) : AndroidViewModel(application) {
 
+
     private val notebookDao = AppDatabase.getDatabase(application).notebookDao()
 
     private val _notebooks = MutableStateFlow<List<Notebook>>(emptyList())
@@ -24,5 +25,10 @@ class NotebookListViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
+    fun deleteNotebook(notebook: Notebook) {
+        viewModelScope.launch {
+            notebookDao.deleteById(notebook.id)
+        }
+    }
 
 }
