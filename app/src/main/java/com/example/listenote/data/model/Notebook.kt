@@ -22,5 +22,6 @@ data class Notebook(
     @ColumnInfo(name = "audio_source_id", index = true)
     val audioSourceId: Long,
     val title: String,
+    @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis()
 )

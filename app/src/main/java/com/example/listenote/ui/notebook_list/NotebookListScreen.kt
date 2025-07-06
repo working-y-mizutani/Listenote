@@ -97,7 +97,7 @@ fun NotebookListScreen(
     }
 }
 
-// DateTimeFormatter.ofPattern()がAPI26以降で動かないので@RequiresApi
+    // DateTimeFormatter.ofPattern()がAPI26以前で動かないので@RequiresApi
 @RequiresApi(Build.VERSION_CODES.O)
 fun formatTimestampToDateTime(timestamp: Long): String {
 

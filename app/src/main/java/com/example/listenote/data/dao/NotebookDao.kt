@@ -16,7 +16,7 @@ interface NotebookDao {
     @Update
     suspend fun update(notebook: Notebook)
 
-    @Query("SELECT * FROM notebooks")
+    @Query("SELECT * FROM notebooks ORDER BY created_at DESC")
     fun getAllNotebooks(): Flow<List<Notebook>>
 
     @Query("SELECT * FROM notebooks WHERE id = :notebookId")
@@ -27,8 +27,6 @@ interface NotebookDao {
 
     @Query("SELECT * FROM notebooks WHERE audio_source_id = :audioSourceId")
     suspend fun getNotebooksForAudioSource(audioSourceId: Long): List<Notebook>
-
-
 
 
 }

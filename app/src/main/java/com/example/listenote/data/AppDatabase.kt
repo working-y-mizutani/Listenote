@@ -13,7 +13,7 @@ import com.example.listenote.data.model.Notebook
 
 @Database(
     entities = [AudioSource::class, Notebook::class, Memo::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 // Daoの保持と、初回のDB作成
@@ -34,7 +34,8 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "listenote_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration(false).build()
                 INSTANCE = instance
                 instance
             }
