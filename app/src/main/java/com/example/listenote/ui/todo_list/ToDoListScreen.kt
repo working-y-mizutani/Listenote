@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -194,7 +195,7 @@ fun ToDoItem(
 
 
             Text(
-                text = getCardText(memo),
+                text = getMemoDisplayText(memo),
                 style = if (memo.isCompleted) {
                     // isCompletedがtrueなら打ち消し線とグレー表示
                     MaterialTheme.typography.bodyLarge.copy(
@@ -203,14 +204,16 @@ fun ToDoItem(
                     )
                 } else {
                     MaterialTheme.typography.bodyLarge
-                }
+                },
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
 
         }
     }
 }
 
-private fun getCardText(memo: Memo): String {
+private fun getMemoDisplayText(memo: Memo): String {
 
     return when {
         !memo.toDo.isNullOrEmpty() -> memo.toDo
