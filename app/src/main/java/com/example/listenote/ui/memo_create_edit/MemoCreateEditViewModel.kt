@@ -21,7 +21,9 @@ data class MemoEditUiState(
 
     // 編集モードか否か。既存のメモを変種る際は編集モードとなる。
     // 削除ボタンを表示させるかどうかに使用する。
-    val isEditing: Boolean = false
+    val isEditing: Boolean = false,
+
+    val showDeleteConfirmDialog: Boolean = false,
 )
 
 class MemoCreateEditViewModel(
@@ -103,6 +105,15 @@ class MemoCreateEditViewModel(
             // 具体的な処理(戻る処理)はui側で行う。ViewModelの役割ではない。
             _navigateBack.emit(Unit)
         }
+    }
+
+
+    fun onDeleteRequest() {
+        uiState = uiState.copy(showDeleteConfirmDialog = true)
+    }
+
+    fun onDismissDeleteDialog() {
+        uiState = uiState.copy(showDeleteConfirmDialog = false)
     }
 
     fun deleteMemo() {
