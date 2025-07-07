@@ -2,6 +2,7 @@ package com.example.listenote.ui.notebook
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
+import com.example.listenote.ui.util.formatDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,18 +93,32 @@ fun NotebookScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(8.dp),
+                                .padding(12.dp),
                         ) {
-                            Text(
-                                text = memo.impression ?: "感想なし",
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                            Text(
-                                text = memo.toDo ?: "感想なし",
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                            )
+                            Text(text = formatDuration(memo.timestamp))
+                            Row {
+                                Text(
+                                    text = if (memo.impression.isNullOrEmpty()) {
+                                        "感想なし"
+                                    } else {
+                                        memo.impression
+                                    },
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                Text(
+                                    text = if (memo.toDo.isNullOrEmpty()) {
+                                        "ToDo無し"
+                                    } else {
+                                        memo.toDo
+                                    },
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+
                         }
                     }
 
