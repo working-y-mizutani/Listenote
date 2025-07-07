@@ -1,6 +1,5 @@
 package com.example.listenote.ui.todo_list
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,12 +11,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DragHandle
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -43,6 +45,7 @@ import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDoListScreen(
     modifier: Modifier = Modifier, navController: NavController,
@@ -63,58 +66,25 @@ fun ToDoListScreen(
     val sortedMemos = memos.sortedBy { it.toDoPosition }
     Scaffold(
         topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface) // 背景色
-            ) {
-                // 「ドラッグで並べ替え」のテキスト
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "並べ替え"
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        "ToDoリスト",
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("ドラッグで並べ替え")
-                }
 
-                // 「全て完了/未完了にする」ボタン
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Button(
-                        onClick = { viewModel.updateAllComplete() },
-                        modifier = Modifier.weight(1f),
-                        shape = RectangleShape
-                    ) {
-                        Text(text = "全て完了にする")
-                    }
-                    VerticalDivider(
-                        modifier = Modifier
-                            .height(48.dp)
-                            .width(1.dp),
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
-                    )
-                    Button(
-                        onClick = { viewModel.updateAllIncomplete() },
-                        modifier = Modifier.weight(1f),
-                        shape = RectangleShape
-                    ) {
-                        Text(text = "全て未完了にする")
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "戻る"
+                        )
                     }
                 }
-            }
+            )
         },
-        // --- 下部の固定UI ---
+
         bottomBar = {
-            // BottomAppBarで囲むのをやめ、Buttonを直接配置する
             Button(
                 onClick = {
                     val notebookId = viewModel.notebook.value?.id
@@ -123,7 +93,6 @@ fun ToDoListScreen(
                     }
                 },
                 enabled = sortedMemos.any { !it.isCompleted },
-                // modifierをfillMaxWidth()に戻す
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp),
@@ -133,26 +102,60 @@ fun ToDoListScreen(
             }
         }
     ) { innerPadding ->
-        LazyColumn(
-            state = state.listState,
-            modifier = Modifier
-                .padding(innerPadding) // ★Scaffoldからのpaddingを適用
-                .fillMaxWidth()
-                .reorderable(state)
-        ) {
-            items(sortedMemos, key = { it.id }) { memo ->
-                ReorderableItem(state, key = memo.id) { isDragging ->
-                    ToDoItem(
-                        memo = memo,
-                        state = state,
-                        onCheckedChange = { isChecked ->
-                            viewModel.updateCompletion(memo.id, isChecked)
-                        },
-                        modifier = Modifier.shadow(if (isDragging) 8.dp else 0.dp)
-                    )
+        Column(modifier = Modifier.padding(innerPadding)) {
+            Text(
+                text = "ドラッグで優先順位を変更できます。\nToDoモードでは上から順に表示されます。",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(4.dp)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = { viewModel.updateAllComplete() },
+                    modifier = Modifier.weight(1f),
+                    shape = RectangleShape
+                ) {
+                    Text(text = "全て完了に")
+                }
+                VerticalDivider(
+                    modifier = Modifier
+                        .height(48.dp)
+                        .width(1.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+                )
+                Button(
+                    onClick = { viewModel.updateAllIncomplete() },
+                    modifier = Modifier.weight(1f),
+                    shape = RectangleShape
+                ) {
+                    Text(text = "全て未完了に")
+                }
+            }
+            LazyColumn(
+                state = state.listState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .reorderable(state)
+            ) {
+                items(sortedMemos, key = { it.id }) { memo ->
+                    ReorderableItem(state, key = memo.id) { isDragging ->
+                        ToDoItem(
+                            memo = memo,
+                            state = state,
+                            onCheckedChange = { isChecked ->
+                                viewModel.updateCompletion(memo.id, isChecked)
+                            },
+                            modifier = Modifier.shadow(if (isDragging) 8.dp else 0.dp)
+                        )
+                    }
                 }
             }
         }
+
 
     }
 
@@ -175,7 +178,6 @@ fun ToDoItem(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 1. ドラッグハンドル
             Icon(
                 imageVector = Icons.Default.DragHandle,
                 contentDescription = "並べ替えハンドル",
@@ -185,7 +187,6 @@ fun ToDoItem(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // 2. チェックボックス
             Checkbox(
                 checked = memo.isCompleted,
                 onCheckedChange = onCheckedChange
@@ -197,7 +198,7 @@ fun ToDoItem(
             Text(
                 text = getMemoDisplayText(memo),
                 style = if (memo.isCompleted) {
-                    // isCompletedがtrueなら打ち消し線とグレー表示
+                    // 完了済みならtrueなら打ち消し線とグレー表示
                     MaterialTheme.typography.bodyLarge.copy(
                         textDecoration = TextDecoration.LineThrough,
                         color = Color.Gray
@@ -214,7 +215,6 @@ fun ToDoItem(
 }
 
 private fun getMemoDisplayText(memo: Memo): String {
-
     return when {
         !memo.toDo.isNullOrEmpty() -> memo.toDo
         !memo.impression.isNullOrEmpty() -> memo.impression
