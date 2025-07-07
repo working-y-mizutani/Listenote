@@ -13,14 +13,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -29,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
-import com.example.listenote.ui.theme.formatDuration
+import com.example.listenote.ui.util.formatDuration
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +82,7 @@ fun MemoCreateEditScreen(
     //ScaffoldならTopAppBarを使えるため使用
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text(if (uiState.isEditing) "メモの編集" else "メモの作成") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
@@ -106,7 +107,24 @@ fun MemoCreateEditScreen(
                         }
                     }
                 })
-        }) { innerPadding ->
+
+
+        },
+
+        bottomBar = {
+            Surface(
+                // Surfaceに影をつけて、コンテンツとの境界を明確にする
+                shadowElevation = 8.dp
+            ) {
+
+                PlayerUI(
+                    audioUri = null,
+                    viewModel = audioPlayerViewModel
+                )
+            }
+        }
+
+    ) { innerPadding ->
 
         Column(
             modifier = Modifier
@@ -159,9 +177,6 @@ fun MemoCreateEditScreen(
                 }
             }
 
-            PlayerUI(
-                audioUri = null, modifier = Modifier.weight(0.3f), viewModel = audioPlayerViewModel
-            )
         }
     }
 }
