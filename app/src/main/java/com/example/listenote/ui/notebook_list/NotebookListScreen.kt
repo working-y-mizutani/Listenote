@@ -150,7 +150,7 @@ private fun DeletableCard(
                 .clip(CardDefaults.shape) // 全体をカードの形でクリップ
         ) {
             // --- 1. 背景 (赤い削除ボタンエリア) ---
-            // Boxがコンテナ全体に広がり、赤い背景となります
+            // Boxがコンテナ全体に広がり、赤い背景
             Box(
                 modifier = Modifier
                     .matchParentSize()
