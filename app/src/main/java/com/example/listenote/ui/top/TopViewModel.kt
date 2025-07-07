@@ -15,10 +15,10 @@ import com.example.listenote.data.model.Notebook
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.io.File
+
 
 class TopViewModel(application: Application) : AndroidViewModel(application) {
-    // DAOへの参照を保持
+
     private val audioSourceDao = AppDatabase.getDatabase(application).audioSourceDao()
     private val notebookDao = AppDatabase.getDatabase(application).notebookDao()
 
@@ -27,38 +27,49 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
     // 画面遷移のトリガー役。LaunchedEffectの引数
     val createdNotebookId = _createdNotebookId.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     fun createNotebookFromUri(uri: Uri) {
         viewModelScope.launch {
+            _isLoading.value = true
 
-            val context = getApplication<Application>().applicationContext
-            val title = getFileName(uri) ?: "Untitled"
-            val duration = getAudioDuration(context, uri) ?: 0L
-            val uriString = uri.toString()
-
-            var existingAudioSource = audioSourceDao.getAudioSourceByUri(uriString)
-            val audioSourceId: Long
-            if (existingAudioSource == null) {
-                // 2. なければ、新しいAudioSourceを作成してDBに保存
+            try {
+                val context = getApplication<Application>().applicationContext
+                val title = getFileName(uri) ?: "Untitled"
                 val duration = getAudioDuration(context, uri) ?: 0L
-                val newAudioSource = AudioSource(
-                    uri = uriString,
-                    title = title,
-                    duration = duration
-                )
-                audioSourceId = audioSourceDao.insert(newAudioSource)
-            } else {
-                // 3. あれば、そのIDをそのまま使う
-                audioSourceId = existingAudioSource.id
-            }
-            val notebookTitle = findUniqueNotebookTitle(audioSourceId, title)
-            val notebook = Notebook(
-                audioSourceId = audioSourceId,
-                title = notebookTitle
-            )
-            val notebookId = notebookDao.insert(notebook)
+                val uriString = uri.toString()
 
-            //こいつの変更をトリガーにNotebookScreenに遷移
-            _createdNotebookId.value = notebookId
+                var existingAudioSource = audioSourceDao.getAudioSourceByUri(uriString)
+                val audioSourceId: Long
+                if (existingAudioSource == null) {
+                    // 2. なければ、新しいAudioSourceを作成してDBに保存
+                    val duration = getAudioDuration(context, uri) ?: 0L
+                    val newAudioSource = AudioSource(
+                        uri = uriString,
+                        title = title,
+                        duration = duration
+                    )
+                    audioSourceId = audioSourceDao.insert(newAudioSource)
+                } else {
+                    // 3. あれば、そのIDをそのまま使う
+                    audioSourceId = existingAudioSource.id
+                }
+                val notebookTitle = findUniqueNotebookTitle(audioSourceId, title)
+                val notebook = Notebook(
+                    audioSourceId = audioSourceId,
+                    title = notebookTitle
+                )
+                val notebookId = notebookDao.insert(notebook)
+
+                //こいつの変更をトリガーにNotebookScreenに遷移
+                _createdNotebookId.value = notebookId
+            } finally {
+
+                _isLoading.value = false
+            }
+
+
         }
     }
 

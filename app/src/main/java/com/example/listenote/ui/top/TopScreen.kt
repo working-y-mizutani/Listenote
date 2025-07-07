@@ -5,11 +5,13 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +30,7 @@ fun TopScreen(navController: NavController, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val viewModel: TopViewModel = viewModel()
     val createdNotebookId by viewModel.createdNotebookId.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     // ファイルピッカーのランチャーを準備
     val launcher = rememberLauncherForActivityResult(
@@ -56,6 +59,17 @@ fun TopScreen(navController: NavController, modifier: Modifier = Modifier) {
             }
         }
     )
+
+    // load中はくるくるにする
+    if (isLoading) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
     Column(
         modifier = modifier.fillMaxSize(),
