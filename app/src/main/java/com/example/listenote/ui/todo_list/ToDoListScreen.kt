@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -125,7 +123,9 @@ fun ToDoListScreen(
                 },
                 enabled = sortedMemos.any { !it.isCompleted },
                 // modifierをfillMaxWidth()に戻す
-                modifier = Modifier.fillMaxWidth().height(64.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp),
                 shape = RectangleShape
             ) {
                 Text("TODOモードへ")
@@ -153,13 +153,6 @@ fun ToDoListScreen(
             }
         }
 
-        Button(
-            onClick = { viewModel.updateAllIncomplete() }
-        ) { Text(text = "全部未完了") }
-
-        Button(
-            onClick = { viewModel.updateAllComplete() }
-        ) { Text(text = "全部完了") }
     }
 
 
@@ -199,9 +192,9 @@ fun ToDoItem(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // 3. ToDo内容のテキスト
+
             Text(
-                text = memo.toDo ?: "(ToDo未設定)", // toDoがnullの場合の表示
+                text = getCardText(memo),
                 style = if (memo.isCompleted) {
                     // isCompletedがtrueなら打ち消し線とグレー表示
                     MaterialTheme.typography.bodyLarge.copy(
@@ -213,11 +206,15 @@ fun ToDoItem(
                 }
             )
 
-            // toDoPosition確認用
-            Text(text = "ポジション" + memo.toDoPosition.toString())
-
-            Text(text = "isCompleted is" + memo.isCompleted.toString())
-
         }
+    }
+}
+
+private fun getCardText(memo: Memo): String {
+
+    return when {
+        !memo.toDo.isNullOrEmpty() -> memo.toDo
+        !memo.impression.isNullOrEmpty() -> memo.impression
+        else -> "メモ未記入"
     }
 }

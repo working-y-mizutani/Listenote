@@ -68,7 +68,6 @@ class ToDoListViewModel(application: Application, private val notebookId: Long) 
         }
     }
 
-    //Test用
     fun updateAllComplete() {
         viewModelScope.launch {
             _memos.value.forEach { memo ->
@@ -79,7 +78,6 @@ class ToDoListViewModel(application: Application, private val notebookId: Long) 
         }
     }
 
-    //Test用
     fun updateAllIncomplete() {
         viewModelScope.launch {
             _memos.value.forEach { memo ->
@@ -89,6 +87,7 @@ class ToDoListViewModel(application: Application, private val notebookId: Long) 
             }
         }
     }
+
 }
 
 class ToDoListViewModelFactory(
