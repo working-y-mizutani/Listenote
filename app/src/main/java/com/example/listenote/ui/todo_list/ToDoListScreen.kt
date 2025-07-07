@@ -1,21 +1,29 @@
 package com.example.listenote.ui.todo_list
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DragHandle
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -53,11 +62,80 @@ fun ToDoListScreen(
 
     // SQL空の取得は順番が確定していないので並べ替えしてLazyColumnに渡す
     val sortedMemos = memos.sortedBy { it.toDoPosition }
-    Column {
+    Scaffold(
+        topBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface) // 背景色
+            ) {
+                // 「ドラッグで並べ替え」のテキスト
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "並べ替え"
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("ドラッグで並べ替え")
+                }
+
+                // 「全て完了/未完了にする」ボタン
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(
+                        onClick = { viewModel.updateAllComplete() },
+                        modifier = Modifier.weight(1f),
+                        shape = RectangleShape
+                    ) {
+                        Text(text = "全て完了にする")
+                    }
+                    VerticalDivider(
+                        modifier = Modifier
+                            .height(48.dp)
+                            .width(1.dp),
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+                    )
+                    Button(
+                        onClick = { viewModel.updateAllIncomplete() },
+                        modifier = Modifier.weight(1f),
+                        shape = RectangleShape
+                    ) {
+                        Text(text = "全て未完了にする")
+                    }
+                }
+            }
+        },
+        // --- 下部の固定UI ---
+        bottomBar = {
+            // BottomAppBarで囲むのをやめ、Buttonを直接配置する
+            Button(
+                onClick = {
+                    val notebookId = viewModel.notebook.value?.id
+                    if (notebookId != null) {
+                        navController.navigate("focus_todo_screen/$notebookId")
+                    }
+                },
+                enabled = sortedMemos.any { !it.isCompleted },
+                // modifierをfillMaxWidth()に戻す
+                modifier = Modifier.fillMaxWidth().height(64.dp),
+                shape = RectangleShape
+            ) {
+                Text("TODOモードへ")
+            }
+        }
+    ) { innerPadding ->
         LazyColumn(
             state = state.listState,
             modifier = Modifier
-                .weight(1f)
+                .padding(innerPadding) // ★Scaffoldからのpaddingを適用
                 .fillMaxWidth()
                 .reorderable(state)
         ) {
@@ -75,21 +153,6 @@ fun ToDoListScreen(
             }
         }
 
-
-        Button(
-            onClick = {
-                // viewModelからnotebookIdを取得して渡す
-                val notebookId = viewModel.notebook.value?.id
-                if (notebookId != null) {
-                    navController.navigate("focus_todo_screen/$notebookId")
-                }
-            },
-            // sortedMemosの中に未完了タスクがある場合のみボタンを有効化
-            enabled = sortedMemos.any { !it.isCompleted }
-        ) {
-            Text("ToDoモード開始")
-        }
-
         Button(
             onClick = { viewModel.updateAllIncomplete() }
         ) { Text(text = "全部未完了") }
@@ -97,7 +160,6 @@ fun ToDoListScreen(
         Button(
             onClick = { viewModel.updateAllComplete() }
         ) { Text(text = "全部完了") }
-
     }
 
 
