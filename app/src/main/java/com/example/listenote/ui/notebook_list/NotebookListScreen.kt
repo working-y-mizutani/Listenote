@@ -25,12 +25,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -53,6 +57,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NotebookListScreen(
@@ -62,42 +67,62 @@ fun NotebookListScreen(
 ) {
     val notebooks by viewModel.notebooks.collectAsState()
 
-    LazyColumn(
-        modifier = modifier.padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(items = notebooks, key = { it.id }) { notebook ->
-
-            DeletableCard(
-                onClick = {
-                    navController.navigate("notebook/${notebook.id}")
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text("ノートブック一覧")
                 },
-                onDelete = { viewModel.deleteNotebook(notebook) }
-            ) {
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "戻る"
+                        )
+                    }
+                },
+            )
+        },
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+        ) { innerPadding ->
+        LazyColumn(
+            modifier = modifier.padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(items = notebooks, key = { it.id }) { notebook ->
+                DeletableCard(
+                    onClick = {
+                        navController.navigate("notebook/${notebook.id}")
+                    },
+                    onDelete = { viewModel.deleteNotebook(notebook) }
                 ) {
-                    Text(
-                        text = notebook.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = formatTimestampToDateTime(notebook.createdAt),
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.align(Alignment.End)
-                    )
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = notebook.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = formatTimestampToDateTime(notebook.createdAt),
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.align(Alignment.End)
+                        )
+                    }
                 }
             }
         }
     }
+
+
 }
 
-    // DateTimeFormatter.ofPattern()がAPI26以前で動かないので@RequiresApi
+// DateTimeFormatter.ofPattern()がAPI26以前で動かないので@RequiresApi
 @RequiresApi(Build.VERSION_CODES.O)
 fun formatTimestampToDateTime(timestamp: Long): String {
 
@@ -138,6 +163,8 @@ private fun DeletableCard(
             decayAnimationSpec = exponentialDecay()
         )
     }
+
+
 
     Box(
         modifier = modifier
