@@ -1,4 +1,4 @@
-package com.example.listenote.ui.theme
+package com.example.listenote.ui.util
 
 import android.annotation.SuppressLint
 
