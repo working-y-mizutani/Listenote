@@ -3,6 +3,7 @@ package com.example.listenote.player
 import android.app.Application
 import android.content.ComponentName
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
@@ -105,7 +106,16 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
 
     fun loadAudio(uri: Uri) {
 
-        // これがないと保存時などに再生位置が0になってしまう
+        val context = getApplication<Application>().applicationContext
+        val persistedPermissions = context.contentResolver.persistedUriPermissions
+        val hasPermission = persistedPermissions.any { it.uri == uri && it.isReadPermission }
+
+        if(!hasPermission){
+            Log.e("AudioPlayerViewModel", "Permission for URI not found: $uri")
+            return
+        }
+
+        // これがないとメモ保存時などに再生位置が0になってしまう
         if (currentLoadedUri == uri) {
             // 同じ音源が既にロードされていれば、何もしない
             return

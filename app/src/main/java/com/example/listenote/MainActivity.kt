@@ -39,7 +39,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ListenoteTheme {
+            ListenoteTheme(
+                dynamicColor = false
+            ) {
                 val navController = rememberNavController()
                 val audioPlayerViewModel: AudioPlayerViewModel = viewModel()
                 ListenoteApp(navController, audioPlayerViewModel)
