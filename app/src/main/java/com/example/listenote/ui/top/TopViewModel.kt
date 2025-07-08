@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/listenote/ui/top/TopViewModel.kt
 package com.example.listenote.ui.top
 
 import android.app.Application
@@ -37,7 +36,6 @@ class TopViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val context = getApplication<Application>().applicationContext
                 val title = getFileName(uri) ?: "Untitled"
-                val duration = getAudioDuration(context, uri) ?: 0L
                 val uriString = uri.toString()
 
                 var existingAudioSource = audioSourceDao.getAudioSourceByUri(uriString)
