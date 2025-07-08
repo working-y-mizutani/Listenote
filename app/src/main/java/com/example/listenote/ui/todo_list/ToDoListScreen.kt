@@ -117,7 +117,8 @@ fun ToDoListScreen(
                 Button(
                     onClick = { viewModel.updateAllComplete() },
                     modifier = Modifier.weight(1f),
-                    shape = RectangleShape
+                    shape = RectangleShape,
+
                 ) {
                     Text(text = "全て完了に")
                 }

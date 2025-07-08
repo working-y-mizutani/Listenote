@@ -16,7 +16,6 @@ val NotoSansJpFamily = FontFamily(
     Font(
         resId = R.font.noto_sansjp_variable_font_wght,
         weight = FontWeight.Light,
-        // variationSettingsで対応する'wght'軸の値を指定
         variationSettings = FontVariation.Settings(FontVariation.weight(300))
     ),
     Font(
@@ -68,7 +67,7 @@ val Typography = Typography(
     headlineSmall = TextStyle(
         fontFamily = NotoSansJpFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 32.sp,
+        fontSize = 24.sp,
         lineHeight = 40.sp,
     ),
     titleLarge = TextStyle(
@@ -114,7 +113,7 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontFamily = NotoSansJpFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         lineHeight = 20.sp,
     ),
     labelMedium = TextStyle(

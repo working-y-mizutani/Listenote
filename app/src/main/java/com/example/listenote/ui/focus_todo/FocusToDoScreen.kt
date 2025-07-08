@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.listenote.data.model.Memo
 
@@ -94,7 +93,7 @@ fun TaskView(
         ) {
             Text(
                 text = task.impression ?: "",
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.headlineSmall
             )
         }
 
@@ -109,9 +108,8 @@ fun TaskView(
         ) {
             Text(
                 text = task.toDo ?: "",
-                fontSize = 24.sp,
-
-                )
+                style = MaterialTheme.typography.headlineSmall
+            )
         }
 
 
@@ -141,7 +139,7 @@ fun TaskView(
 @Composable
 fun CompletionView(navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("すべてのタスクが完了しました！", fontSize = 20.sp)
+        Text("すべてのタスクが完了しました！", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = { navController.popBackStack() }) {
             Text("リストに戻る")
@@ -152,7 +150,7 @@ fun CompletionView(navController: NavController) {
 @Composable
 fun NoTasksView(navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("実行できるタスクがありません。", fontSize = 20.sp)
+        Text("実行できるタスクがありません。", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = { navController.popBackStack() }) {
             Text("リストに戻る")
