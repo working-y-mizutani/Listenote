@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.FastRewind
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -59,35 +61,38 @@ fun PlayerUI(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // 3秒戻るボタン
-            Button(
+            FilledTonalIconButton(
                 onClick = { viewModel.seekBackward() },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.FastRewind,
-                    contentDescription = "3秒戻る"
+                    contentDescription = "3秒戻る",
+                    modifier = Modifier.size(32.dp)
                 )
             }
 
             // 再生/一時停止ボタン
-            Button(
+            FilledIconButton(
                 onClick = { viewModel.playPause() },
                 modifier = Modifier.size(64.dp)
             ) {
                 Icon(
                     imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                    contentDescription = if (isPlaying) "一時停止" else "再生"
+                    contentDescription = if (isPlaying) "一時停止" else "再生",
+                    modifier = Modifier.size(48.dp)
                 )
             }
 
             // 3秒進むボタン
-            Button(
+            FilledTonalIconButton(
                 onClick = { viewModel.seekForward() },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.FastForward,
-                    contentDescription = "3秒進む"
+                    contentDescription = "3秒進む",
+                    modifier = Modifier.size(32.dp)
                 )
             }
         }
