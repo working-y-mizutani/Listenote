@@ -45,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -105,13 +104,12 @@ fun NotebookListScreen(
                         Text(
                             text = notebook.title,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = formatTimestampToDateTime(notebook.createdAt),
                             style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.align(Alignment.End)
+                            modifier = Modifier.align(Alignment.End),
                         )
                     }
                 }
@@ -169,6 +167,7 @@ private fun DeletableCard(
     Box(
         modifier = modifier
             .clip(CardDefaults.shape)
+            .padding(4.dp)
     ) {
         // --- 背景：削除ボタン ---
         Box(
@@ -226,6 +225,10 @@ private fun DeletableCard(
                             }
                         )
                     },
+                colors = CardDefaults.cardColors(
+                    // メモのCard色に対して差別化させる
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                ),
                 // 前景のカードのcontent（本来の表示内容）
                 content = content
             )
