@@ -70,7 +70,7 @@ fun NotebookListScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("ノートブック一覧")
+                    Text("ノート一覧")
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
