@@ -68,7 +68,7 @@ fun PlayerUI(
                 Icon(
                     imageVector = Icons.Filled.FastRewind,
                     contentDescription = "3秒戻る",
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(28.dp)
                 )
             }
 
@@ -80,7 +80,7 @@ fun PlayerUI(
                 Icon(
                     imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                     contentDescription = if (isPlaying) "一時停止" else "再生",
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(36.dp)
                 )
             }
 
@@ -92,7 +92,7 @@ fun PlayerUI(
                 Icon(
                     imageVector = Icons.Filled.FastForward,
                     contentDescription = "3秒進む",
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(28.dp)
                 )
             }
         }
