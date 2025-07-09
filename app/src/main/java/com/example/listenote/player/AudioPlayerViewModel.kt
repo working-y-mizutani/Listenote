@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -28,10 +29,15 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     private val _totalDuration = MutableStateFlow(0L)
     val totalDuration = _totalDuration.asStateFlow()
 
+    // 再生エラーメッセージを管理するStateFlow
+    private val _playbackError = MutableStateFlow<String?>(null)
+    val playbackError = _playbackError.asStateFlow()
+
     private var positionUpdateJob: Job? = null
     private var mediaController: MediaController? = null
 
     private var currentLoadedUri: Uri? = null
+
 
     init {
         val sessionToken = SessionToken(
@@ -54,10 +60,17 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             _isPlaying.value = isPlaying
             if (isPlaying) {
+                _playbackError.value = null
                 startPositionUpdates()
             } else {
                 stopPositionUpdates()
             }
+        }
+
+        override fun onPlayerError(error: PlaybackException) {
+            // 今回のケースでは、音源の読み込み失敗が該当します
+            _playbackError.value = "音源を再生できません。ネットワーク接続を確認してください。"
+            Log.e("AudioPlayerViewModel", "Playback error: ", error)
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -105,15 +118,6 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun loadAudio(uri: Uri) {
-
-        val context = getApplication<Application>().applicationContext
-        val persistedPermissions = context.contentResolver.persistedUriPermissions
-        val hasPermission = persistedPermissions.any { it.uri == uri && it.isReadPermission }
-
-        if(!hasPermission){
-            Log.e("AudioPlayerViewModel", "Permission for URI not found: $uri")
-            return
-        }
 
         // これがないとメモ保存時などに再生位置が0になってしまう
         if (currentLoadedUri == uri) {
@@ -166,6 +170,10 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
             startPositionUpdates()
         }
 
+    }
+
+    fun onErrorMessageShown() {
+        _playbackError.value = null
     }
 
     override fun onCleared() {
