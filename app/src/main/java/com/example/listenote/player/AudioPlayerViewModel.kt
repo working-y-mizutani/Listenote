@@ -29,6 +29,9 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
     private val _totalDuration = MutableStateFlow(0L)
     val totalDuration = _totalDuration.asStateFlow()
 
+    private val _isBuffering = MutableStateFlow(false)
+    val isBuffering = _isBuffering.asStateFlow()
+
     // 再生エラーメッセージを管理するStateFlow
     private val _playbackError = MutableStateFlow<String?>(null)
     val playbackError = _playbackError.asStateFlow()
@@ -74,6 +77,7 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
         }
 
         override fun onPlaybackStateChanged(playbackState: Int) {
+            _isBuffering.value = playbackState == Player.STATE_BUFFERING
             updateState()
         }
 
