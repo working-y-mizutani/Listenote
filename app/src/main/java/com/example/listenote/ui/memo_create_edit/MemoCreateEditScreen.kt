@@ -151,7 +151,7 @@ fun MemoCreateEditScreen(
                     .padding(bottom = 16.dp)
 
             ) {
-                val labelWidth = 68.dp
+                val labelWidth = 96.dp
                 val spaceBetween = 12.dp
 
                 Row(
