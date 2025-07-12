@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Listenote</string>
+
+    <string name="common_back">Back</string>
+    <string name="common_save">Save</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_yes">Yes</string>
+    <string name="common_no">No</string>
+
+    <string name="top_create_new_note">Create New Note</string>
+    <string name="top_view_note_list">View Note List</string>
+
+    <string name="notebook_list_title">Note List</string>
+
+    <string name="notebook_fab_description">Add memo</string>
+    <string name="notebook_empty_memo_list">No memos found. You can create one with the + button.</string>
+    <string name="notebook_memo_no_impression">No impression</string>
+    <string name="notebook_memo_no_todo">No ToDo</string>
+
+    <string name="memo_edit_title">Edit Memo</string>
+    <string name="memo_create_title">Create Memo</string>
+    <string name="memo_delete_dialog_title">Confirm Deletion</string>
+    <string name="memo_delete_dialog_text">Are you sure you want to delete this memo?</string>
+    <string name="memo_label_time">Time</string>
+    <string name="memo_label_impression">Impression</string>
+    <string name="memo_label_todo">ToDo</string>
+
+    <string name="player_rewind_cd">Rewind 3 seconds</string>
+    <string name="player_play_cd">Play</string>
+    <string name="player_pause_cd">Pause</string>
+    <string name="player_forward_cd">Fast-forward 3 seconds</string>
+
+    <string name="todo_list_title">ToDo List</string>
+    <string name="todo_mode_button">Enter ToDo Mode</string>
+    <string name="todo_list_drag_description">You can change the priority by dragging.\nTasks are displayed in order from the top in ToDo Mode.</string>
+    <string name="todo_list_complete_all">Mark All as Complete</string>
+    <string name="todo_list_incomplete_all">Mark All as Incomplete</string>
+    <string name="todo_item_drag_handle_cd">Drag handle</string>
+    <string name="todo_item_empty_memo">No memo content</string>
+
+    <string name="focus_todo_postpone">Postpone</string>
+    <string name="focus_todo_complete">Complete</string>
+    <string name="focus_todo_all_tasks_completed">All tasks have been completed!</string>
+    <string name="focus_todo_back_to_list">Back to List</string>
+    <string name="focus_todo_no_tasks">There are no tasks to perform.</string>
+</resources>
