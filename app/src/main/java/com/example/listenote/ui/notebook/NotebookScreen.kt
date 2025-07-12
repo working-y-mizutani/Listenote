@@ -81,7 +81,7 @@ fun NotebookScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        audioPlayerViewModel.playPause()
+                        audioPlayerViewModel.pause()
                         navController.popBackStack()
                     }) {
                         Icon(

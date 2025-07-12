@@ -71,7 +71,6 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
         }
 
         override fun onPlayerError(error: PlaybackException) {
-            // 今回のケースでは、音源の読み込み失敗が該当します
             _playbackError.value = "音源を再生できません。ネットワーク接続を確認してください。"
             Log.e("AudioPlayerViewModel", "Playback error: ", error)
         }
