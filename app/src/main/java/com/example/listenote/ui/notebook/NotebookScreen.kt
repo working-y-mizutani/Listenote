@@ -80,7 +80,10 @@ fun NotebookScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        audioPlayerViewModel.playPause()
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "戻る"
@@ -97,9 +100,7 @@ fun NotebookScreen(
                 Column {
                     Button(
                         onClick = {
-                            if (audioPlayerViewModel.isPlaying.value) {
-                                audioPlayerViewModel.playPause()
-                            }
+                            audioPlayerViewModel.pause()
                             notebook?.let { navController.navigate("todo_list/${it.id}") }
                         },
                         modifier = Modifier
@@ -121,9 +122,7 @@ fun NotebookScreen(
 
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                if (audioPlayerViewModel.isPlaying.value) {
-                    audioPlayerViewModel.playPause()
-                }
+                audioPlayerViewModel.pause()
                 notebook?.let {
                     navController.navigate("memo_create_edit/${it.id}?timestamp=${currentPosition}")
                 }

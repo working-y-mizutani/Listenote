@@ -145,6 +145,14 @@ class AudioPlayerViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun pause() {
+        mediaController?.let {
+            if (it.isPlaying) {
+                it.pause()
+            }
+        }
+    }
+
     private val seekInterval = 3000L
 
     fun seekForward() {
