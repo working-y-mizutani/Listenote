@@ -34,10 +34,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.listenote.R
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
 import com.example.listenote.ui.util.formatDuration
@@ -86,7 +88,7 @@ fun NotebookScreen(
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "戻る"
+                            contentDescription = stringResource(id = R.string.common_back)
                         )
                     }
                 },
@@ -108,7 +110,7 @@ fun NotebookScreen(
                             .height(64.dp),
                         shape = RectangleShape
                     ) {
-                        Text("TODOモードへ")
+                        Text(stringResource(id = R.string.todo_mode_button))
                     }
 
                     PlayerUI(
@@ -129,7 +131,7 @@ fun NotebookScreen(
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "停止してメモを取る"
+                    contentDescription = stringResource(id = R.string.notebook_fab_description)
                 )
             }
         }
@@ -144,7 +146,7 @@ fun NotebookScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = "メモがありません。+ ボタンからメモを作成できます。",
+                    text = stringResource(id = R.string.notebook_empty_memo_list),
                     modifier = Modifier
                         .padding(8.dp),
                     style = MaterialTheme.typography.bodySmall,
@@ -176,7 +178,7 @@ fun NotebookScreen(
                             Row {
                                 Text(
                                     text = if (memo.impression.isNullOrEmpty()) {
-                                        "感想なし"
+                                        stringResource(id = R.string.notebook_memo_no_impression)
                                     } else {
                                         memo.impression
                                     },
@@ -186,7 +188,7 @@ fun NotebookScreen(
                                 )
                                 Text(
                                     text = if (memo.toDo.isNullOrEmpty()) {
-                                        "ToDo無し"
+                                        stringResource(id = R.string.notebook_memo_no_todo)
                                     } else {
                                         memo.toDo
                                     },

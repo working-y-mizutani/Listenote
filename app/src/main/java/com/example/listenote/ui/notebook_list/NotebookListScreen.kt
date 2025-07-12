@@ -1,7 +1,5 @@
 package com.example.listenote.ui.notebook_list
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.animation.core.tween
@@ -45,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -54,10 +53,9 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
-
+import com.example.listenote.R
 
 @OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NotebookListScreen(
     modifier: Modifier = Modifier,
@@ -70,13 +68,13 @@ fun NotebookListScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("ノート一覧")
+                    Text(stringResource(id = R.string.notebook_list_title))
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "戻る"
+                            contentDescription = stringResource(id = R.string.common_back)
                         )
                     }
                 },
@@ -120,8 +118,7 @@ fun NotebookListScreen(
 
 }
 
-// DateTimeFormatter.ofPattern()がAPI26以前で動かないので@RequiresApi
-@RequiresApi(Build.VERSION_CODES.O)
+
 fun formatTimestampToDateTime(timestamp: Long): String {
 
     val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
@@ -142,7 +139,7 @@ private fun DeletableCard(
 ) {
     val density = LocalDensity.current
 
-    // スワイプで止まる位置(Anchor)を先に定義します
+    // スワイプで止まる位置(Anchor)を先に定義
     val anchors = remember {
         DraggableAnchors {
             "Closed" at 0f
@@ -150,7 +147,7 @@ private fun DeletableCard(
         }
     }
 
-    // スワイプの状態を管理します
+    // スワイプの状態を管理
     val anchoredDraggableState = remember {
         AnchoredDraggableState(
             initialValue = "Closed",

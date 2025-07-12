@@ -24,9 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.listenote.R
 import com.example.listenote.data.model.Memo
 import com.example.listenote.ui.util.formatDuration
 
@@ -53,7 +55,7 @@ fun FocusToDoScreen(
                             .height(64.dp),
                         shape = RectangleShape,
                     ) {
-                        Text("後回し")
+                        Text(stringResource(id = R.string.focus_todo_postpone))
                     }
                     Button(
                         onClick = { viewModel.onCompleteClick() },
@@ -62,7 +64,7 @@ fun FocusToDoScreen(
                             .height(64.dp),
                         shape = RectangleShape,
                     ) {
-                        Text("完了")
+                        Text(stringResource(id = R.string.focus_todo_complete))
                     }
                 }
             }
@@ -162,13 +164,13 @@ fun TaskView(
 fun CompletionView(navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            "すべてのタスクが完了しました！",
+            stringResource(id = R.string.focus_todo_all_tasks_completed),
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = { navController.popBackStack() }) {
-            Text("リストに戻る")
+            Text(stringResource(id = R.string.focus_todo_back_to_list))
         }
     }
 }
@@ -177,13 +179,13 @@ fun CompletionView(navController: NavController) {
 fun NoTasksView(navController: NavController) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            "実行できるタスクがありません。",
+            stringResource(id = R.string.focus_todo_no_tasks),
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(onClick = { navController.popBackStack() }) {
-            Text("リストに戻る")
+            Text(stringResource(id = R.string.focus_todo_back_to_list))
         }
     }
 }

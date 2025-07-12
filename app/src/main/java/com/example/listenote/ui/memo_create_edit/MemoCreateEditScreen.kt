@@ -26,12 +26,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.listenote.R
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.player.PlayerUI
 import com.example.listenote.ui.util.formatDuration
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,22 +49,22 @@ fun MemoCreateEditScreen(
     if (uiState.showDeleteConfirmDialog) {
         AlertDialog(
             onDismissRequest = { viewModel.onDismissDeleteDialog() },
-            title = { Text("削除の確認") },
-            text = { Text("このメモを本当に削除しますか？") },
+            title = { Text(stringResource(id = R.string.memo_delete_dialog_title)) },
+            text = { Text(stringResource(id = R.string.memo_delete_dialog_text)) },
             confirmButton = {
                 TextButton(
                     onClick = {
                         viewModel.deleteMemo()
                     }
                 ) {
-                    Text("はい")
+                    Text(stringResource(id = R.string.common_yes))
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { viewModel.onDismissDeleteDialog() }
                 ) {
-                    Text("いいえ")
+                    Text(stringResource(id = R.string.common_no))
                 }
             }
         )
@@ -83,12 +84,19 @@ fun MemoCreateEditScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(if (uiState.isEditing) "メモの編集" else "メモの作成") },
+                title = {
+                    Text(
+                        if (uiState.isEditing)
+                            stringResource(id = R.string.memo_edit_title)
+                        else
+                            stringResource(id = R.string.memo_create_title)
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "戻る"
+                            contentDescription = stringResource(id = R.string.common_back)
                         )
                     }
                 },
@@ -96,14 +104,18 @@ fun MemoCreateEditScreen(
                     // 保存ボタン
                     IconButton(onClick = { viewModel.saveMemo() }) {
                         Icon(
-                            imageVector = Icons.Default.Check, contentDescription = "保存"
+                            imageVector = Icons.Default.Check,
+                            contentDescription = stringResource(id = R.string.common_save)
                         )
                     }
                     // 削除ボタンは編集モード時のみ表示
                     // 既存のメモを選択した際に編集モードとなる
                     if (uiState.isEditing) {
                         IconButton(onClick = { viewModel.onDeleteRequest() }) {
-                            Icon(Icons.Default.Delete, contentDescription = "削除")
+                            Icon(
+                                Icons.Default.Delete,
+                                contentDescription = stringResource(id = R.string.common_delete)
+                            )
                         }
                     }
                 })
@@ -146,7 +158,7 @@ fun MemoCreateEditScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "時間", modifier = Modifier.width(labelWidth))
+                    Text(text = stringResource(id = R.string.memo_label_time), modifier = Modifier.width(labelWidth))
                     Text(text = formatDuration(uiState.timestamp))
                 }
                 Spacer(modifier = Modifier.height(spaceBetween))
@@ -155,7 +167,7 @@ fun MemoCreateEditScreen(
                         .fillMaxWidth()
                         .weight(1f), verticalAlignment = Alignment.Top
                 ) {
-                    Text(text = "感想", modifier = Modifier.width(labelWidth))
+                    Text(text = stringResource(id = R.string.memo_label_impression), modifier = Modifier.width(labelWidth))
                     TextField(
                         value = uiState.impression,
                         onValueChange = { viewModel.onImpressionChange(it) },

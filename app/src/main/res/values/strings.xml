@@ -1,3 +1,46 @@
 <resources>
     <string name="app_name">DTMメモ</string>
+
+    <string name="common_back">戻る</string>
+    <string name="common_save">保存</string>
+    <string name="common_delete">削除</string>
+    <string name="common_yes">はい</string>
+    <string name="common_no">いいえ</string>
+
+    <string name="top_create_new_note">新しいノートを作成</string>
+    <string name="top_view_note_list">ノート一覧</string>
+
+    <string name="notebook_list_title">ノート一覧</string>
+
+    <string name="notebook_fab_description">停止してメモを取る</string>
+    <string name="notebook_empty_memo_list">メモがありません。+ ボタンからメモを作成できます。</string>
+    <string name="notebook_memo_no_impression">感想なし</string>
+    <string name="notebook_memo_no_todo">ToDo無し</string>
+
+    <string name="memo_edit_title">メモの編集</string>
+    <string name="memo_create_title">メモの作成</string>
+    <string name="memo_delete_dialog_title">削除の確認</string>
+    <string name="memo_delete_dialog_text">このメモを本当に削除しますか？</string>
+    <string name="memo_label_time">時間</string>
+    <string name="memo_label_impression">感想</string>
+    <string name="memo_label_todo">ToDo</string>
+
+    <string name="player_rewind_cd">3秒戻る</string>
+    <string name="player_play_cd">再生</string>
+    <string name="player_pause_cd">一時停止</string>
+    <string name="player_forward_cd">3秒進む</string>
+
+    <string name="todo_list_title">ToDoリスト</string>
+    <string name="todo_mode_button">TODOモードへ</string>
+    <string name="todo_list_drag_description">ドラッグで優先順位を変更できます。\nToDoモードでは上から順に表示されます。</string>
+    <string name="todo_list_complete_all">全て完了に</string>
+    <string name="todo_list_incomplete_all">全て未完了に</string>
+    <string name="todo_item_drag_handle_cd">並べ替えハンドル</string>
+    <string name="todo_item_empty_memo">メモ未記入</string>
+
+    <string name="focus_todo_postpone">後回し</string>
+    <string name="focus_todo_complete">完了</string>
+    <string name="focus_todo_all_tasks_completed">すべてのタスクが完了しました！</string>
+    <string name="focus_todo_back_to_list">リストに戻る</string>
+    <string name="focus_todo_no_tasks">実行できるタスクがありません。</string>
 </resources>

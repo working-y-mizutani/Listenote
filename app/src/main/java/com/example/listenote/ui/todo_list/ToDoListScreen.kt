@@ -32,18 +32,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.listenote.R
 import com.example.listenote.data.model.Memo
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.ReorderableLazyListState
 import org.burnoutcrew.reorderable.detectReorder
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +70,7 @@ fun ToDoListScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "ToDoリスト",
+                        stringResource(id = R.string.todo_list_title),
                     )
 
                 },
@@ -77,7 +78,7 @@ fun ToDoListScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "戻る"
+                            contentDescription = stringResource(id = R.string.common_back)
                         )
                     }
                 }
@@ -98,13 +99,13 @@ fun ToDoListScreen(
                     .height(64.dp),
                 shape = RectangleShape
             ) {
-                Text("TODOモードへ")
+                Text(stringResource(id = R.string.todo_mode_button))
             }
         }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Text(
-                text = "ドラッグで優先順位を変更できます。\nToDoモードでは上から順に表示されます。",
+                text = stringResource(id = R.string.todo_list_drag_description),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(4.dp)
@@ -119,8 +120,8 @@ fun ToDoListScreen(
                     modifier = Modifier.weight(1f),
                     shape = RectangleShape,
 
-                ) {
-                    Text(text = "全て完了に")
+                    ) {
+                    Text(text = stringResource(id = R.string.todo_list_complete_all))
                 }
                 VerticalDivider(
                     modifier = Modifier
@@ -133,7 +134,7 @@ fun ToDoListScreen(
                     modifier = Modifier.weight(1f),
                     shape = RectangleShape
                 ) {
-                    Text(text = "全て未完了に")
+                    Text(text = stringResource(id = R.string.todo_list_incomplete_all))
                 }
             }
             LazyColumn(
@@ -181,7 +182,7 @@ fun ToDoItem(
         ) {
             Icon(
                 imageVector = Icons.Default.DragHandle,
-                contentDescription = "並べ替えハンドル",
+                contentDescription = stringResource(id = R.string.todo_item_drag_handle_cd),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.detectReorder(state)
             )
@@ -197,9 +198,9 @@ fun ToDoItem(
 
 
             Text(
-                text = getMemoDisplayText(memo),
+                text = getMemoDisplayText(memo, stringResource(R.string.todo_item_empty_memo)),
                 style = if (memo.isCompleted) {
-                    // 完了済みならtrueなら打ち消し線とグレー表示
+                    // 完了済みなら打ち消し線とグレー表示
                     MaterialTheme.typography.bodyLarge.copy(
                         textDecoration = TextDecoration.LineThrough,
                         color = Color.Gray
@@ -215,10 +216,10 @@ fun ToDoItem(
     }
 }
 
-private fun getMemoDisplayText(memo: Memo): String {
+private fun getMemoDisplayText(memo: Memo, emptyMemoText: String): String {
     return when {
         !memo.toDo.isNullOrEmpty() -> memo.toDo
         !memo.impression.isNullOrEmpty() -> memo.impression
-        else -> "メモ未記入"
+        else -> emptyMemoText
     }
 }

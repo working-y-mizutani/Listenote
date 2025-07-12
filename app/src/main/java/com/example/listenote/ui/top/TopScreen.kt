@@ -20,10 +20,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
+import com.example.listenote.R
 
 @Composable
 fun TopScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -88,7 +89,7 @@ fun TopScreen(navController: NavController, modifier: Modifier = Modifier) {
                 .fillMaxWidth(0.6f)
                 .height(100.dp)
         ) {
-            Text(text = "新しいノートを作成")
+            Text(text = stringResource(id = R.string.top_create_new_note))
         }
 
         Button(
@@ -97,7 +98,7 @@ fun TopScreen(navController: NavController, modifier: Modifier = Modifier) {
                 .fillMaxWidth(0.6f)
                 .height(100.dp)
         ) {
-            Text(text = "ノート一覧")
+            Text(text = stringResource(id = R.string.top_view_note_list))
         }
     }
 }
