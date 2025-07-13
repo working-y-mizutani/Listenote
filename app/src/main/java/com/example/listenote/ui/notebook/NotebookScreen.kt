@@ -3,7 +3,6 @@ package com.example.listenote.ui.notebook
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -175,29 +174,30 @@ fun NotebookScreen(
                             .fillMaxWidth()
                             .padding(12.dp),
                     ) {
-                        Text(text = formatDuration(memo.timestamp))
-                        Row {
-                            Text(
-                                text = if (memo.impression.isNullOrEmpty()) {
-                                    stringResource(id = R.string.notebook_memo_no_impression)
-                                } else {
-                                    memo.impression
-                                },
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f),
-                            )
-                            Text(
-                                text = if (memo.toDo.isNullOrEmpty()) {
-                                    stringResource(id = R.string.notebook_memo_no_todo)
-                                } else {
-                                    memo.toDo
-                                },
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f),
-                            )
-                        }
+
+                        Text(
+                            text = if (memo.impression.isNullOrEmpty()) {
+                                stringResource(id = R.string.notebook_memo_no_impression)
+                            } else {
+                                memo.impression
+                            },
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Text(
+                            text = if (memo.toDo.isNullOrEmpty()) {
+                                stringResource(id = R.string.notebook_memo_no_todo)
+                            } else {
+                                memo.toDo
+                            },
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Text(
+                            text = formatDuration(memo.timestamp),
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.align(Alignment.End),
+                        )
 
                     }
                 }
