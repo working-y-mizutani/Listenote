@@ -153,55 +153,55 @@ fun NotebookScreen(
                     textAlign = TextAlign.Center
                 )
             }
-        } else {
-            // メモ一覧を表示
-            LazyColumn(modifier = Modifier.padding(innerPadding)) {
-                items(memos) { memo ->
-                    Card(
+            return@Scaffold
+        }
+        // メモ一覧を表示
+        LazyColumn(modifier = Modifier.padding(innerPadding)) {
+            items(memos) { memo ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            // 既存のメモをタップしたら編集できるようにする
+                            navController.navigate(
+                                "memo_create_edit/${memo.notebookId}" +
+                                        "?memoId=${memo.id}&timestamp=${memo.timestamp}"
+                            )
+                        }
+                        .padding(8.dp),
+                ) {
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
-                                // 既存のメモをタップしたら編集できるようにする
-                                navController.navigate(
-                                    "memo_create_edit/${memo.notebookId}" +
-                                            "?memoId=${memo.id}&timestamp=${memo.timestamp}"
-                                )
-                            }
-                            .padding(8.dp),
+                            .padding(12.dp),
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                        ) {
-                            Text(text = formatDuration(memo.timestamp))
-                            Row {
-                                Text(
-                                    text = if (memo.impression.isNullOrEmpty()) {
-                                        stringResource(id = R.string.notebook_memo_no_impression)
-                                    } else {
-                                        memo.impression
-                                    },
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f),
-                                )
-                                Text(
-                                    text = if (memo.toDo.isNullOrEmpty()) {
-                                        stringResource(id = R.string.notebook_memo_no_todo)
-                                    } else {
-                                        memo.toDo
-                                    },
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(1f),
-                                )
-                            }
-
+                        Text(text = formatDuration(memo.timestamp))
+                        Row {
+                            Text(
+                                text = if (memo.impression.isNullOrEmpty()) {
+                                    stringResource(id = R.string.notebook_memo_no_impression)
+                                } else {
+                                    memo.impression
+                                },
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f),
+                            )
+                            Text(
+                                text = if (memo.toDo.isNullOrEmpty()) {
+                                    stringResource(id = R.string.notebook_memo_no_todo)
+                                } else {
+                                    memo.toDo
+                                },
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f),
+                            )
                         }
-                    }
 
+                    }
                 }
+
             }
         }
 
