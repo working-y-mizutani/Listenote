@@ -40,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.listenote.R
 import com.example.listenote.data.model.Memo
+import com.example.listenote.ui.util.formatDuration
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.ReorderableLazyListState
 import org.burnoutcrew.reorderable.detectReorder
@@ -196,21 +197,54 @@ fun ToDoItem(
 
             Spacer(modifier = Modifier.width(16.dp))
 
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
 
-            Text(
-                text = getMemoDisplayText(memo, stringResource(R.string.todo_item_empty_memo)),
-                style = if (memo.isCompleted) {
-                    // 完了済みなら打ち消し線とグレー表示
+                val textStyle = if (memo.isCompleted) {
                     MaterialTheme.typography.bodyLarge.copy(
                         textDecoration = TextDecoration.LineThrough,
                         color = Color.Gray
                     )
                 } else {
                     MaterialTheme.typography.bodyLarge
-                },
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
+                }
+
+                Text(
+                    text = if (memo.impression.isNullOrEmpty()) {
+                        stringResource(id = R.string.notebook_memo_no_impression)
+                    } else {
+                        memo.impression
+                    },
+                    style = textStyle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = if (memo.toDo.isNullOrEmpty()) {
+                        stringResource(id = R.string.notebook_memo_no_todo)
+                    } else {
+                        memo.toDo
+                    },
+                    style = textStyle,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = formatDuration(memo.timestamp),
+                    style = if (memo.isCompleted) {
+                        MaterialTheme.typography.bodyLarge.copy(
+                            textDecoration = TextDecoration.LineThrough,
+                            color = Color.Gray
+                        )
+                    } else {
+                        MaterialTheme.typography.bodySmall
+                    },
+                    modifier = Modifier.align(Alignment.End),
+                )
+
+            }
 
         }
     }
