@@ -11,4 +11,5 @@ DTM メモ は、音声コンテンツを聴きながら、重要なポイント
 音楽に対するメモ帳として作成しましたが、音声を聞きながらメモを取るシーンならほかの分野でも役立つと思います。
 
 # 使い方動画
-[![紹介/使い方動画]()](https://youtu.be/88TrDCX-eJo)
+[![紹介/使い方動画](<img width="1024" height="500" alt="DTM Memo" src="https://github.com/user-attachments/assets/f5bf80f8-35b9-44e4-99c8-d537f58b861b" />
+)]([https://youtu.be/88TrDCX-eJo](https://www.youtube.com/watch?v=88TrDCX-eJo))
