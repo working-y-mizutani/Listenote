@@ -12,3 +12,5 @@ DTM メモ は、音声コンテンツを聴きながら、重要なポイント
 
 # 使い方動画
 [![紹介/使い方動画](https://github.com/user-attachments/assets/f5bf80f8-35b9-44e4-99c8-d537f58b861b)]([https://youtu.be/88TrDCX-eJo](https://www.youtube.com/watch?v=88TrDCX-eJo))
+上記画像でyoutubeの動画へ飛びます。
+Google store向けの紹介/使い方についての動画です。
