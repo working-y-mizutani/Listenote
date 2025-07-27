@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -72,33 +77,49 @@ fun TopScreen(navController: NavController, modifier: Modifier = Modifier) {
         return
     }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(
-            space = 200.dp,
-            alignment = Alignment.CenterVertically
-        ),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = {
-                // ファイルピッカーを起動
-                launcher.launch(arrayOf("audio/*"))
-            },
-            modifier = Modifier
-                .fillMaxWidth(0.6f)
-                .height(100.dp)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(
+                space = 200.dp,
+                alignment = Alignment.CenterVertically
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = stringResource(id = R.string.top_create_new_note))
+            Button(
+                onClick = {
+                    // ファイルピッカーを起動
+                    launcher.launch(arrayOf("audio/*"))
+                },
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(100.dp)
+            ) {
+                Text(text = stringResource(id = R.string.top_create_new_note))
+            }
+
+            Button(
+                onClick = { navController.navigate("notebook_list") },
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(100.dp)
+            ) {
+                Text(text = stringResource(id = R.string.top_view_note_list))
+            }
+
+
         }
 
-        Button(
-            onClick = { navController.navigate("notebook_list") },
+        IconButton(
+            onClick = { navController.navigate("license") },
             modifier = Modifier
-                .fillMaxWidth(0.6f)
-                .height(100.dp)
+                .align(Alignment.BottomEnd) // 右下に配置
+                .padding(16.dp)
         ) {
-            Text(text = stringResource(id = R.string.top_view_note_list))
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = "ライセンス情報"
+            )
         }
     }
 }

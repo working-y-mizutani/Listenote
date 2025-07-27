@@ -1,12 +1,10 @@
 package com.example.listenote
 
 import android.app.Application
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -23,6 +21,7 @@ import androidx.navigation.navArgument
 import com.example.listenote.player.AudioPlayerViewModel
 import com.example.listenote.ui.focus_todo.FocusToDoScreen
 import com.example.listenote.ui.focus_todo.FocusToDoViewModelFactory
+import com.example.listenote.ui.license.LicenseScreen
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditScreen
 import com.example.listenote.ui.memo_create_edit.MemoCreateEditViewModelFactory
 import com.example.listenote.ui.notebook.NotebookScreen
@@ -34,7 +33,6 @@ import com.example.listenote.ui.todo_list.ToDoListViewModelFactory
 import com.example.listenote.ui.top.TopScreen
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,7 +48,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ListenoteApp(
     navController: NavHostController,
@@ -174,6 +171,10 @@ fun ListenoteApp(
                         )
                     )
                 }
+            }
+
+            composable(route = "license") {
+                LicenseScreen()
             }
         }
     }
