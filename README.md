@@ -32,3 +32,4 @@ https://github.com/user-attachments/assets/258c9d77-2a37-4440-a6ff-400cf857da65
 * **データベース:** Room (SQLite)
 * **画面遷移:** Navigation Compose
 * **音声再生:** Media3 ExoPlayer
+* **ドラッグ&ドロップ操作:** [ComposeReorderable](https://github.com/aclassen/ComposeReorderable)
