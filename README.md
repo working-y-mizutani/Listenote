@@ -9,8 +9,26 @@
 # アプリケーション「DTM メモ」について
 本アプリは、音声コンテンツを聴きながらタイムスタンプと共に記録できるAndroidアプリケーションです。
 
+## 主な機能
+
+* **メモ作成:**
+    音声を聞きながらメモを取ることができます。
+* **TODOモード:**
+    メモで作成したToDo一件ずつ表示して、1つのタスクに集中しやすくすることができます。
+
 
 # 使い方動画
-[![紹介/使い方動画](https://github.com/user-attachments/assets/f5bf80f8-35b9-44e4-99c8-d537f58b861b)]([https://youtu.be/88TrDCX-eJo](https://www.youtube.com/watch?v=88TrDCX-eJo))
-上記画像でyoutubeの動画へ飛びます。
-Google store向けの紹介/使い方についての動画です。
+🔊 **音が出ますのでご注意ください**
+
+https://github.com/user-attachments/assets/258c9d77-2a37-4440-a6ff-400cf857da65
+
+
+
+## 使用技術
+
+* **言語:** Kotlin
+* **UI:** Jetpack Compose
+* **アーキテクチャ:** MVVM
+* **データベース:** Room (SQLite)
+* **画面遷移:** Navigation Compose
+* **音声再生:** Media3 ExoPlayer
